@@ -11,29 +11,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class Manager {
-    Users users = new Users();
-
-
+	DBConnection conn=DBConnection.getInstance();
     //Function to create account
     //If it returns true    -> Account was created successfully!
     //If it returns false   -> Username already exists!
     @RequestMapping("/create")
-    public boolean createAccount(@RequestParam(value="username") String username, @RequestParam(value="name") String name,
-                          @RequestParam(value="age") String age, @RequestParam(value="password") String password)
+    public boolean createAccount(@RequestParam(value="username") String username, @RequestParam(value="password") String password)
     {
-        return users.createAccount(username, password, name);
+    	if(conn.createUser("username", "password")){
+    		return true;
+    	}
+        return false;
     }
 
     @RequestMapping("/logIn")
-    public String logIn(@RequestParam(value="username") String username)
+    public boolean logIn(@RequestParam(value="username") String username, @RequestParam(value="password") String password)
     {
-        return users.logIn(username);
+    	if(conn.verify(username, password)){
+    		return true;
+    	}
+        return false;
     }
 
     @RequestMapping("/getProfile")
     public String getProfile(@RequestParam(value="username") String username)
     {
-        return users.getProfile(username);
+    	
+        return null;
     }
     
     @RequestMapping("/sendProfile")
@@ -41,7 +45,7 @@ public class Manager {
     public JSONObject sendProfile(String username)
     {
     	JSONObject j=new JSONObject();
-    	j.put("name", "arlindo");
+    	j.put("name", username);
     	j.put("username", "lindo");
     	j.put("age", 23);
         return j;
@@ -50,13 +54,12 @@ public class Manager {
     @RequestMapping("/addLocation")
     public void addPoints(@RequestParam(value="username") String username, @RequestParam(value="points") int newLocations)
     {
-        users.addLocation(username, newLocations);
     }
 
     @RequestMapping("/checkLocation")
     public int getPoints(@RequestParam(value="username") String username)
     {
-        return users.getLocation(username);
+        return 0;
     }
     
 	@RequestMapping("/")
