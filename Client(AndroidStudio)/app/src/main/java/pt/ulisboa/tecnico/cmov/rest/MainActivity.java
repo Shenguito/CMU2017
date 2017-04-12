@@ -14,12 +14,13 @@ import android.widget.TextView;
 
 import org.json.simple.JSONObject;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-
-import pt.ulisboa.tecnico.cmov.rest.tool.String2JSON;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    private static final String LOCALHOST="http://192.168.1.2:8080/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,32 +74,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    private class HttpRequestTask extends AsyncTask<Void, Void, String> {
+    private class HttpRequestTask extends AsyncTask<Void, Void, JSONObject> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected JSONObject doInBackground(Void... params) {
             try {
-                final String url = "http://192.168.1.81:8080/";
+                final String url = LOCALHOST+"create";
                 RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-                String result = restTemplate.getForObject(url, String.class);
-                return result;
+                JSONObject json=new JSONObject();
+                json.put("username", "arlindo");
+                json.put("password", "abc123");
+                JSONObject response = restTemplate.postForObject(url, json, JSONObject.class);
+                return response;
             } catch (Exception e) {
                 Log.e("MainActivityTest", e.getMessage(), e);
             }
-
             return null;
         }
 
         @Override
-        protected void onPostExecute(String value) {
+        protected void onPostExecute(JSONObject value) {
             TextView greetingIdText = (TextView) findViewById(R.id.id_value);
             TextView greetingContentText = (TextView) findViewById(R.id.content_value);
-            JSONObject j=new String2JSON().getJSON(value);
-            greetingIdText.setText("name");
-            greetingContentText.setText(j.get("name").toString());
+            //JSONObject j=new String2JSON().getJSON(value.toString());
+            greetingIdText.setText("username");
+            greetingContentText.setText(value.get("username").toString());
         }
-
     }
-
 }

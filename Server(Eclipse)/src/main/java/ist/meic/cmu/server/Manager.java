@@ -6,8 +6,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import org.json.simple.JSONObject;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @RestController
 public class Manager {
@@ -15,13 +18,17 @@ public class Manager {
     //Function to create account
     //If it returns true    -> Account was created successfully!
     //If it returns false   -> Username already exists!
-    @RequestMapping("/create")
-    public boolean createAccount(@RequestParam(value="username") String username, @RequestParam(value="password") String password)
+    @RequestMapping(value="/create", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject createAccount(@RequestBody JSONObject json)
     {
-    	if(conn.createUser("username", "password")){
-    		return true;
-    	}
-        return false;
+    	String username=(String) json.get("username");
+    	String password=(String) json.get("password");
+    	System.out.println(username+"\n"+password);
+//    	if(conn.createUser(username, password)){
+//    		return username+"\n"+password;
+//    	}
+        return json;
     }
 
     @RequestMapping("/logIn")
