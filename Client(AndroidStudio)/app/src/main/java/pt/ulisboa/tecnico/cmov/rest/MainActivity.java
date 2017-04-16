@@ -17,10 +17,13 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import pt.ulisboa.tecnico.cmov.rest.tool.Action;
+import pt.ulisboa.tecnico.cmov.rest.tool.MessageType;
+
 public class MainActivity extends AppCompatActivity {
 
 
-    private static final String LOCALHOST="http://192.168.1.2:8080/";
+    private static final String LOCALHOST="http://192.168.1.3:8080/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        new HttpRequestTask().execute();
+        Action action =new Action(MessageType.CREATE, "arlindo", "abc123");
+        new HttpRequestTask().execute(action);
     }
     @Override
     protected void onPause() {
@@ -74,17 +78,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class HttpRequestTask extends AsyncTask<Void, Void, JSONObject> {
+    private class HttpRequestTask extends AsyncTask<Action, Void, JSONObject> {
         @Override
-        protected JSONObject doInBackground(Void... params) {
+        protected JSONObject doInBackground(Action... params) {
             try {
-                final String url = LOCALHOST+"create";
+                Action action=params[0];
+                final String url = LOCALHOST+action.getType().toString();
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
                 JSONObject json=new JSONObject();
-                json.put("username", "arlindo");
-                json.put("password", "abc123");
+                json.put("username", action.getUsername());
+                json.put("password", action.getPassword());
                 JSONObject response = restTemplate.postForObject(url, json, JSONObject.class);
                 return response;
             } catch (Exception e) {
@@ -97,9 +102,13 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject value) {
             TextView greetingIdText = (TextView) findViewById(R.id.id_value);
             TextView greetingContentText = (TextView) findViewById(R.id.content_value);
-            //JSONObject j=new String2JSON().getJSON(value.toString());
-            greetingIdText.setText("username");
-            greetingContentText.setText(value.get("username").toString());
+            if(value!=null) {
+                greetingIdText.setText("username");
+                greetingContentText.setText(value.get("username").toString());
+            }else{
+                greetingIdText.setText("username");
+                greetingContentText.setText(value.toJSONString());
+            }
         }
     }
 }

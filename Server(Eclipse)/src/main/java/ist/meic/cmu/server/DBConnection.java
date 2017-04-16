@@ -47,6 +47,33 @@ public class DBConnection {
 
 		}
 	}
+	
+	
+	public ArrayList<Location> getAllLocation(){
+		ArrayList<Location> locationList = new ArrayList<Location>();
+		Connection connect = connect();
+		// PreparedStatements can use variables and are more efficient
+		try {
+			Statement statement = connect.createStatement();
+
+			ResultSet rs=statement.executeQuery("SELECT * FROM locmessdb.location");
+			while(rs.next()){
+				Location location=new Location(rs.getString(1), rs.getFloat(2), rs.getFloat(3), rs.getInt(4));
+				
+				locationList.add(location);
+
+			}
+			return locationList;
+
+		} catch (SQLException e) {
+			System.out.println("DBConnection::getAllUsers:FAIL to execute Query");
+			e.printStackTrace();
+		}
+		finally {
+			disconnect(connect);
+		}
+		return null;
+	}
 
 	public boolean verify(String user, String password) {
 
@@ -79,12 +106,12 @@ public class DBConnection {
 		Connection connect = connect();
 		// PreparedStatements can use variables and are more efficient
 		try {
-			PreparedStatement preparedStatement = connect .prepareStatement("insert into  locmessdb.users(`username`, `password`) values (? , ?)");
 			
+			PreparedStatement preparedStatement = connect .prepareStatement("insert into  locmessdb.user(`username`, `password`) values (? , ?)");
+
 			preparedStatement.setString(1, usertoInsert);
 			preparedStatement.setString(2, password);
 			preparedStatement.executeUpdate();
-			
 			return true;
 
 		} catch (SQLException e) {
@@ -135,31 +162,6 @@ public class DBConnection {
 			disconnect(connect);
 		}
 		return false;
-	}
-
-	public ArrayList<String> getAllLocation(){
-		ArrayList<String> users = new ArrayList<String>();
-		Connection connect = connect();
-		// PreparedStatements can use variables and are more efficient
-		try {
-			Statement statement = connect.createStatement();
-
-			ResultSet rs=statement.executeQuery("SELECT location_name FROM locmessdb.location");
-			while(rs.next()){
-
-				users.add(	rs.getString(1));
-
-			}
-			return users;
-
-		} catch (SQLException e) {
-			System.out.println("DBConnection::getAllUsers:FAIL to execute Query");
-			e.printStackTrace();
-		}
-		finally {
-			disconnect(connect);
-		}
-		return users;
 	}
 
 }
