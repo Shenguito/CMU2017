@@ -1,4 +1,4 @@
-package ist.meic.cmu.server;
+package ist.meic.cmu.server.tool;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import java.util.ArrayList;
+
+import ist.meic.cmu.server.storage.Location;
 
 public class DBConnection {
 
@@ -80,7 +82,7 @@ public class DBConnection {
 		Connection connection = connect();
 
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement("SELECT password FROM users WHERE username = ? LIMIT 1");
+			PreparedStatement preparedStatement = connection.prepareStatement("SELECT password FROM locmessdb.users WHERE username = ? LIMIT 1");
 
 			preparedStatement.setString(1, user);
 			ResultSet rs=preparedStatement.executeQuery();

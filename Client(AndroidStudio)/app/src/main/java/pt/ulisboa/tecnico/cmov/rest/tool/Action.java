@@ -1,24 +1,16 @@
 package pt.ulisboa.tecnico.cmov.rest.tool;
 
+import org.json.simple.JSONObject;
+
 public class Action {
     private MessageType type;
-    private String username;
-    private String password;
-    public Action(MessageType type, String username, String password) {
+    private JSONObject json;
+    public Action(MessageType type, JSONObject json) {
         this.type = type;
-        this.username=username;
-        this.password=password;
+        this.json=json;
     }
     public MessageType getType() {
         return type;
     }
-    public String getUsername() {
-        return username;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public JSONObject getJSON(){ return json; }
 }

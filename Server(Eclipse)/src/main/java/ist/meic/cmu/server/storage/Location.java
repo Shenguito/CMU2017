@@ -1,4 +1,4 @@
-package ist.meic.cmu.server;
+package ist.meic.cmu.server.storage;
 
 public class Location {
 	
