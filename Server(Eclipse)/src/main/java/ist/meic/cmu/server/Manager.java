@@ -27,6 +27,7 @@ public class Manager {
     {
     	String username=(String) json.get("username");
     	String password=(String) json.get("password");
+    	System.out.println("Preparing for register...");
     	if(storage.createUser(username, password)){
     		System.out.println(username+"==> Created");
     		return json;
@@ -40,8 +41,12 @@ public class Manager {
     {
     	String username=(String) json.get("username");
     	String password=(String) json.get("password");
+    	System.out.println("Preparing for login...");
     	if(storage.verifyUser(username, password)){
     		System.out.println(username+"==> Login");
+    		String sessionid=storage.giveSessionID(username, password);
+    		json.put("sessionid", sessionid);
+    		System.out.println("sessionID: "+json.get("sessionid"));
     		return json;
     	}
         return null;
@@ -51,6 +56,7 @@ public class Manager {
     @ResponseBody
     public JSONObject logOut(@RequestBody JSONObject json)
     {
+    	
         return null;
     }
 
@@ -97,6 +103,17 @@ public class Manager {
     	j.put("Tiago", "Cruz");
     	j.put("estupidamente", "lindo");
     	j.put("dava-lhe de 0 a 5", 1);
+        return j;
+    }
+	@RequestMapping("/madje")
+	@SuppressWarnings("unchecked")
+    public JSONObject forJokes()
+    {
+    	JSONObject j=new JSONObject();
+    	j.put("JP", "Jonhy Peter");
+    	j.put("From", "Guarda");
+    	j.put("Sex", "Unisex");
+    	j.put("Hobby", "Engatatão");
         return j;
     }
     

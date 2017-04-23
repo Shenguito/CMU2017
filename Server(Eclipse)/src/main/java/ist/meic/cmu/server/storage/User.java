@@ -9,6 +9,7 @@ public class User {
 	public User(String username, String password) {
 		this.username = username;
 		this.password = password;
+		sessionID="";
 	}
 	public String getPassword() {
 		return password;
