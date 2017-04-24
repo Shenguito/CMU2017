@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 import java.util.ArrayList;
 
-import ist.meic.cmu.server.storage.Location;
+import ist.meic.cmu.server.storage.GPSLocation;
 
 public class DBConnection {
 
@@ -51,8 +51,8 @@ public class DBConnection {
 	}
 	
 	
-	public ArrayList<Location> getAllLocation(){
-		ArrayList<Location> locationList = new ArrayList<Location>();
+	public ArrayList<GPSLocation> getAllLocation(){
+		ArrayList<GPSLocation> locationList = new ArrayList<GPSLocation>();
 		Connection connect = connect();
 		// PreparedStatements can use variables and are more efficient
 		try {
@@ -60,7 +60,7 @@ public class DBConnection {
 
 			ResultSet rs=statement.executeQuery("SELECT * FROM locmessdb.location");
 			while(rs.next()){
-				Location location=new Location(rs.getString(1), rs.getFloat(2), rs.getFloat(3), rs.getInt(4));
+				GPSLocation location=new GPSLocation(rs.getString(1), rs.getFloat(2), rs.getFloat(3), rs.getInt(4));
 				
 				locationList.add(location);
 

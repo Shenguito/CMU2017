@@ -56,41 +56,69 @@ public class Manager {
     @ResponseBody
     public JSONObject logOut(@RequestBody JSONObject json)
     {
-    	
+    	String username=(String) json.get("username");
+    	String sessionid=(String) json.get("sessionid");
+    	System.out.println("Preparing for logout...");
+    	if(storage.logout(username, sessionid)){
+    		System.out.println(username+"==> Logout");
+    		System.out.println("sessionID: "+json.get("sessionid"));
+    		return json;
+    	}
         return null;
     }
+    
+    @RequestMapping(value="/addlocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject addLocation(@RequestBody JSONObject json)
+    {
+    	String name=(String) json.get("name");
+    	String lat=(String) json.get("latitude");
+    	String lon=(String) json.get("longitude");
+    	String radius=(String) json.get("radius");
+    	System.out.println("Preparing for adding location...");
+    	if(storage.addLocation(name, lat, lon, radius)){
+    		System.out.println("Location "+name+" added");
+    		return json;
+    	}
+		return null;
+    }
+    
+    @RequestMapping(value="/removelocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject removeLocation(@RequestBody JSONObject json)
+    {
+    	String name=(String) json.get("name");
+    	String lat=(String) json.get("latitude");
+    	String lon=(String) json.get("longitude");
+    	System.out.println("Preparing for removing location...");
+    	if(storage.removeLocation(name, lat, lon)){
+    		System.out.println("Location "+name+" removed");
+    		return json;
+    	}
+		return null;
+    }
 
-    @RequestMapping(value="/getProfile", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/checklocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject getLocation(@RequestBody JSONObject json)
+    {
+    	String lat=(String) json.get("latitude");
+    	String lon=(String) json.get("longitude");
+    	String radius=(String) json.get("radius");
+    	System.out.println("Preparing for adding location...");
+		return storage.getLocation(lat, lon, radius);
+    }
+
+    @RequestMapping(value="/getprofile", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public JSONObject getProfile(@RequestBody JSONObject json)
     {
         return null;
     }
     
-    @RequestMapping(value="/sendProfile", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/sendprofile", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public JSONObject sendProfile(@RequestBody JSONObject json)
-    {
-        return null;
-    }
-
-    @RequestMapping(value="/addLocation", method={ RequestMethod.GET, RequestMethod.POST })
-    @ResponseBody
-    public JSONObject addLocation(@RequestBody JSONObject json)
-    {
-		return null;
-    }
-    
-    @RequestMapping(value="/removeLocation", method={ RequestMethod.GET, RequestMethod.POST })
-    @ResponseBody
-    public JSONObject removeLocation(@RequestBody JSONObject json)
-    {
-		return null;
-    }
-
-    @RequestMapping(value="/checkLocation", method={ RequestMethod.GET, RequestMethod.POST })
-    @ResponseBody
-    public JSONObject getLocation(@RequestBody JSONObject json)
     {
         return null;
     }

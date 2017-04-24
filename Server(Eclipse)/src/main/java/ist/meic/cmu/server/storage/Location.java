@@ -5,13 +5,11 @@ public class Location {
 	private String name;
 	private double longitude;
 	private double latitude;
-	private int radius;
 
-	public Location(String name, double lontitude, double latitude, int radius){
+	public Location(String name, double lontitude, double latitude){
 		this.name=name;
 		this.longitude=lontitude;
 		this.latitude=latitude;
-		this.radius=radius;
 	}
 
 	public String getName() {
@@ -24,10 +22,6 @@ public class Location {
 
 	public double getLatitude() {
 		return latitude;
-	}
-
-	public int getRadius() {
-		return radius;
 	}
 	
 }
