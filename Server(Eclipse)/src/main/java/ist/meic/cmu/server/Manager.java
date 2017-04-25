@@ -1,5 +1,5 @@
 package ist.meic.cmu.server;
-import ist.meic.cmu.server.storage.Location;
+import ist.meic.cmu.server.storage.GPSLocation;
 import ist.meic.cmu.server.storage.Storage;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -123,6 +123,18 @@ public class Manager {
         return null;
     }
     
+    
+	@RequestMapping("/")
+	@SuppressWarnings("unchecked")
+    public ArrayList<GPSLocation> test()
+    {
+		ArrayList<GPSLocation> location=new ArrayList<GPSLocation>();
+    	location.add(new GPSLocation("Sheng", 32.3213,-9.3213, 10));
+    	location.add(new GPSLocation("Arlindo", 32.3323,-9.5413, 6));
+        return location;
+    }
+	
+    /*
 	@RequestMapping("/")
 	@SuppressWarnings("unchecked")
     public JSONObject getArlindo()
@@ -133,27 +145,32 @@ public class Manager {
     	j.put("dava-lhe de 0 a 5", 1);
         return j;
     }
-	@RequestMapping("/madje")
+	
+	@RequestMapping("/jonhypeter")
 	@SuppressWarnings("unchecked")
-    public JSONObject forJokes()
+    public String forJokes()
     {
-    	JSONObject j=new JSONObject();
-    	j.put("JP", "Jonhy Peter");
-    	j.put("From", "Guarda");
-    	j.put("Sex", "Unisex");
-    	j.put("Hobby", "Engatatão");
-        return j;
+		File htmlTemplateFile = new File("page.html");
+    	String page="<!DOCTYPE html>"+
+    	"<html>"+
+    	"<head>"+
+    	"<style>"+
+    	"code { "+
+    	"   font-family: monospace; }"+
+    	"</style>"+
+    	"</head>"+
+    	"<body>"+
+    	"<p>I'm looking for a chicken! :)</p>"+
+    	"<img src=\"https://scontent.flis7-1.fna.fbcdn.net/v/t1.0-9/14639631_1122255697829888_4999803540062379478_n.jpg?oh=640c8c0a8e3d7512488f3d89a1778910&oe=59745E1D\"height=\"300\" width=\"300\">"+
+    	"<p>Hello! My name is Jonhy Peter, I'm such a badboy, I like to get some chickens to eat.</p>"+
+    	"<p>If you are a chicken, just call me maybe.</p>"+
+    	"<p>Thanks.</p>"+
+    	"<p>Oh! By the way! You can just add me on my facebook: </p>"+
+    	"<p>https://www.facebook.com/profile.php?id=100001364065596&fref=hovercard </p>"+
+    	"</body>"+
+    	"</html>";
+        return page;
     }
+	*/
     
-    
-//	@RequestMapping("/")
-//	@SuppressWarnings("unchecked")
-//    public ArrayList<Location> test()
-//    {
-//		ArrayList<Location> location=new ArrayList<Location>();
-//    	location.add(new Location("Sheng", 32.3213,-9.3213, 10));
-//    	location.add(new Location("Arlindo", 32.3323,-9.5413, 6));
-//        return location;
-//    }
-//    
 }
