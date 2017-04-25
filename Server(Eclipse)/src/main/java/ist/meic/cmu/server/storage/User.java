@@ -5,19 +5,11 @@ public class User {
 	private String password;
 	private String sessionID;
 	private Profile profile;
-	private Location location;
 
 	public User(String username, String password) {
 		this.username = username;
 		this.password = password;
 		sessionID="";
-		location=null;
-	}
-	public Location getLocation() {
-		return location;
-	}
-	public void setLocation(Location location) {
-		this.location = location;
 	}
 	public String getPassword() {
 		return password;

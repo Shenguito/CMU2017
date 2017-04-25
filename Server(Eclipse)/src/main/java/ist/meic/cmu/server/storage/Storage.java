@@ -38,12 +38,11 @@ public class Storage {
 	public String giveSessionID(String username, String password){
 		if(user.size()!=0)
 			for (User tmpUser : user) {
-				if(tmpUser.getUsername().equals(username)&&tmpUser.getPassword().equals(password)&&tmpUser.getSessionID()==""){
+				if(tmpUser.getUsername().equals(username)&&tmpUser.getPassword().equals(password)&&tmpUser.getSessionID().equals("")){
 					String random = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 					for(int i=0;i<4;i++){
 						random+=""+(new Random().nextInt(9 - 0 + 1) + 0);
 					}
-					
 					tmpUser.setSessionID(random);
 					return random;
 				}
@@ -100,5 +99,9 @@ public class Storage {
 				}
 			}
 		return json;
+	}
+	public boolean userLocation(String username, String lat, String lon, String sessionid) {
+		
+		return true;
 	}
 }

@@ -67,6 +67,22 @@ public class Manager {
         return null;
     }
     
+    @RequestMapping(value="/userlocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject userLocation(@RequestBody JSONObject json)
+    {
+    	String username=(String) json.get("username");
+    	String sessionid=(String) json.get("sessionid");
+    	String lat=(String) json.get("latitude");
+    	String lon=(String) json.get("longitude");
+    	System.out.println("Preparing for adding location...");
+    	if(storage.userLocation(username, lat, lon, sessionid)){
+    		System.out.println("User: "+username+"\nsessionid: "+sessionid+"\nlatitude: "+lat+"\nlongitude: "+lon);
+    		return json;
+    	}
+		return null;
+    }
+    
     @RequestMapping(value="/addlocation", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public JSONObject addLocation(@RequestBody JSONObject json)
