@@ -149,44 +149,5 @@ public class Manager {
     	location.add(new GPSLocation("Arlindo", 32.3323,-9.5413, 6));
         return location;
     }
-	
-    /*
-	@RequestMapping("/")
-	@SuppressWarnings("unchecked")
-    public JSONObject getArlindo()
-    {
-    	JSONObject j=new JSONObject();
-    	j.put("Tiago", "Cruz");
-    	j.put("estupidamente", "lindo");
-    	j.put("dava-lhe de 0 a 5", 1);
-        return j;
-    }
-	
-	@RequestMapping("/jonhypeter")
-	@SuppressWarnings("unchecked")
-    public String forJokes()
-    {
-		File htmlTemplateFile = new File("page.html");
-    	String page="<!DOCTYPE html>"+
-    	"<html>"+
-    	"<head>"+
-    	"<style>"+
-    	"code { "+
-    	"   font-family: monospace; }"+
-    	"</style>"+
-    	"</head>"+
-    	"<body>"+
-    	"<p>I'm looking for a chicken! :)</p>"+
-    	"<img src=\"https://scontent.flis7-1.fna.fbcdn.net/v/t1.0-9/14639631_1122255697829888_4999803540062379478_n.jpg?oh=640c8c0a8e3d7512488f3d89a1778910&oe=59745E1D\"height=\"300\" width=\"300\">"+
-    	"<p>Hello! My name is Jonhy Peter, I'm such a badboy, I like to get some chickens to eat.</p>"+
-    	"<p>If you are a chicken, just call me maybe.</p>"+
-    	"<p>Thanks.</p>"+
-    	"<p>Oh! By the way! You can just add me on my facebook: </p>"+
-    	"<p>https://www.facebook.com/profile.php?id=100001364065596&fref=hovercard </p>"+
-    	"</body>"+
-    	"</html>";
-        return page;
-    }
-	*/
     
 }
