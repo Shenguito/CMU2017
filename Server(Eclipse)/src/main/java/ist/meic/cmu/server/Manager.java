@@ -15,12 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class Manager {
 	
 	private Storage storage=new Storage();
-	/*
-	private DBConnection conn=DBConnection.getInstance();
-	public void reloadLocalization(){
-		location=conn.getAllLocation();
-	}
-	*/
+
     @RequestMapping(value="/create", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public JSONObject createAccount(@RequestBody JSONObject json)
