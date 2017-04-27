@@ -11,6 +11,7 @@ public class Storage {
 
 	private ArrayList<GPSLocation> location;
 	private ArrayList<User> user;
+	private ArrayList<Post> post;
 	public Storage(){
 		location=new ArrayList<GPSLocation>();
 		user=new ArrayList<User>();
@@ -103,5 +104,48 @@ public class Storage {
 	public boolean userLocation(String username, String lat, String lon, String sessionid) {
 		
 		return true;
+	}
+	public boolean sendPost(String username, String lat, String lon, String radius, String type) {
+		if(post.size()!=0)
+			for(Post p:post){
+				if(p.getUsername().equals("username")
+						&& String.valueOf(p.getLatitude()).equals(lat)
+						&& String.valueOf(p.getLongitude()).equals(lon)){
+					return false;
+				}
+			}
+		post.add(new Post(username, Double.parseDouble(lat), Double.parseDouble(lon), Integer.parseInt(radius), type));
+		return true;
+	}
+	public boolean deletePost(String username, String lat, String lon) {
+		if(post.size()!=0)
+			for(Post p:post){
+				if(p.getUsername().equals("username")
+						&& String.valueOf(p.getLatitude()).equals(lat)
+						&& String.valueOf(p.getLongitude()).equals(lon)){
+					post.remove(p);
+					return true;
+				}
+			}
+		return false;
+	}
+	
+	//maybe it's not necessary-2 (there is 1)
+	public JSONObject getPost(String lat, String lon, JSONObject type) {
+		JSONObject json=new JSONObject();
+		if(post.size()!=0)
+			for (int i=0;i<post.size();i++) {
+				JSONObject jsonPost=new JSONObject();
+				if(type.toJSONString().split(post.get(i).getType()).length>1)
+				if(Algorithm.distFrom(post.get(i).getLatitude(), post.get(i).getLongitude(), Double.parseDouble(lat), Double.parseDouble(lon))<=
+								post.get(i).getRadius()){
+					jsonPost.put("username", post.get(i).getUsername());
+					jsonPost.put("latitude", post.get(i).getLatitude());
+					jsonPost.put("longitude", post.get(i).getLongitude());
+					jsonPost.put("type", post.get(i).getRadius());
+					json.put("post"+i, jsonPost);
+				}
+			}
+		return json;
 	}
 }
