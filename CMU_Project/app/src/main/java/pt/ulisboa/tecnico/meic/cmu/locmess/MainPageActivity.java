@@ -24,10 +24,10 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-import pt.ulisboa.tecnico.meic.cmu.locmess.service.BackgroundLocation;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Action;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Connection;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.MessageType;
+import pt.ulisboa.tecnico.meic.cmu.locmess.service.BackgroundLocation;
 
 /**
  * Created by Akilino on 09/03/2017.
@@ -40,6 +40,8 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
     private static final String LOCATION = "LOCATION";
     private static final String MODE = "MODE";
     private static final String BUNDLE_EXTRAS = "BUNDLE_EXTRAS";
+
+    private CurrentLocation currentLocation;
 
     private ArrayList<Post> posts;
     private Toolbar toolbar;
@@ -75,8 +77,9 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
         floatingActionButtonPost = (FloatingActionButton) findViewById(R.id.floatingActionButtonPost);
 
         handleFloatingActionButton();
+        currentLocation = new CurrentLocation(this);
 
-        new BackgroundLocation(this);
+        //new BackgroundLocation(this);
     }
 
     private void setupRecyclerView(){

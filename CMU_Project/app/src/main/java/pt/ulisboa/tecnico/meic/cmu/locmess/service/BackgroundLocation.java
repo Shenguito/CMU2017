@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.simple.JSONObject;
 
@@ -128,6 +129,7 @@ public class BackgroundLocation extends Service implements LocationListener {
 
                     if (locationManager != null) {
                         Log.d("test1", "getLocation: "+provider_info);
+                        Toast.makeText(mContext, "locationManager", Toast.LENGTH_SHORT).show();
                         location = locationManager.getLastKnownLocation(provider_info);
                         Log.d("test1", "location: "+location.toString());
                     }
@@ -135,6 +137,7 @@ public class BackgroundLocation extends Service implements LocationListener {
 
 
             } catch (Exception e) {
+                Toast.makeText(mContext, "Exception", Toast.LENGTH_SHORT).show();
                 //e.printStackTrace();
                 Log.e("locationManager", "Impossible to connect to LocationManager", e);
             }
@@ -166,6 +169,7 @@ public class BackgroundLocation extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+        Toast.makeText(mContext, "location changed", Toast.LENGTH_SHORT).show();
         this.location = location;
         SharedPreferences sharedPref = getSharedPreferences("file", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username", null);

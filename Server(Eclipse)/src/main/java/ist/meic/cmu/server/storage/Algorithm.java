@@ -12,10 +12,8 @@ public class Algorithm {
 	            * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
 	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 	    double dist = earthRadius * c;
-	    dist=dist*1.609; //convert to kilometers  *don't know if this step is necessary
-	    return dist;
+	    dist=dist*1.609344; //convert to kilometers  *don't know if this step is necessary
+	    return dist*1000;
     }
-	public static void main(String[] args) {
-		System.out.println(distFrom(38.95874, -9.40728, 38.95878, -9.40728));
-	}
+	
 }

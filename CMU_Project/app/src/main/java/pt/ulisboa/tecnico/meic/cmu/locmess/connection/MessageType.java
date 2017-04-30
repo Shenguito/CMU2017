@@ -8,6 +8,7 @@ public enum MessageType {
     sendprofile,
     createlocation,
     removelocation,
+    checklocation,
     editlocation,
     userlocation
 }

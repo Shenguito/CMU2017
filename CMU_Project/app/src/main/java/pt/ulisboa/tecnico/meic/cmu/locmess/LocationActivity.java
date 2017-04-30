@@ -1,6 +1,8 @@
 package pt.ulisboa.tecnico.meic.cmu.locmess;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -12,7 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
+
+import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Action;
+import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Connection;
+import pt.ulisboa.tecnico.meic.cmu.locmess.connection.MessageType;
+import pt.ulisboa.tecnico.meic.cmu.locmess.tool.StringParser;
 
 /**
  * Created by Akilino on 06/04/2017.
@@ -36,7 +46,12 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
         setSupportActionBar(toolbar);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerViewLocation);
+
+
         locations = populateView();
+
+
+
         adapter = new LocationAdapter(this, locations);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -44,15 +59,37 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
     }
 
     public ArrayList<Location> populateView() {
-
         list = new ArrayList<>();
+        SharedPreferences sharedPref = this.getSharedPreferences("file", Context.MODE_PRIVATE);
+        boolean locationExists= sharedPref.getBoolean("location", false);
+        if(locationExists==true){
+            String lat=sharedPref.getString("latitude", null);
+            String lon=sharedPref.getString("longitude", null);
+            JSONObject json = new JSONObject();
+            json.put("latitude", lat);
+            json.put("longitude", lon);
+            Action action = new Action(MessageType.checklocation, json);
+            json = new Connection().execute(action);
+            JSONArray msg;
+            for(int i=0;json.get("location"+i)!=null;i++){
+                String[] result=StringParser.getLocation(json.get("location"+i).toString());
+                Toast.makeText(this,result[0]+" : "+result[3], Toast.LENGTH_LONG).show();
 
-        for (int i = 0; i < 5; i++) {
+                GPS location = new GPS(result[0], result[1], result[2], result[3]);
+                list.add(location);
+            }
+/*
+            if(json!=null) {
+                Toast.makeText(this, json.toJSONString(), Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(this, "fail search", Toast.LENGTH_LONG).show();
+            }*/
+        }
+        for (int i = 0; i < 2; i++) {
             GPS location = new GPS("Location GPS" + i, "12.4" + i, "125.3" + i,"20");
             list.add(location);
         }
-
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             Wifi location = new Wifi("Location Wifi " + i, "Mac Address" + i);
             list.add(location);
         }

@@ -167,12 +167,20 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
                     textViewRadiusSeekBar.getText().toString()!=null) {
                 JSONObject json = new JSONObject();
                 json.put("name", editTextLocationName.getText().toString());
-                json.put("latitude", textViewLat.getText().toString());
-                json.put("longitude", textViewLon.getText().toString());
-                json.put("radius", textViewRadiusSeekBar.getText().toString());
+                json.put("latitude", textViewLat.getText().toString().split(" ")[1]);
+                json.put("longitude", textViewLon.getText().toString().split(" ")[1]);
+                String radius=textViewRadiusSeekBar.getText().toString();
+                json.put("radius", radius.substring(radius.indexOf(" ") + 1, radius.indexOf("m")));
                 Action action = new Action(MessageType.createlocation, json);
                 json = new Connection().execute(action);
-                Toast.makeText(this, "Location successfuly created!", Toast.LENGTH_SHORT).show();
+                if(json!=null){
+                    Toast.makeText(this, "Location successfuly created!", Toast.LENGTH_SHORT).show();
+                }
+
+                Toast.makeText(this, "Location can't be created!", Toast.LENGTH_SHORT).show();
+                //TODO location added
+
+
                 finish();
             }else{
                 Toast.makeText(this, "Complete all fields!", Toast.LENGTH_SHORT).show();

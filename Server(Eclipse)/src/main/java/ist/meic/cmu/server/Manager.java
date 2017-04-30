@@ -83,7 +83,7 @@ public class Manager {
 		return null;
     }
     
-    @RequestMapping(value="/addlocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/createlocation", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public JSONObject addLocation(@RequestBody JSONObject json)
     {
@@ -91,9 +91,13 @@ public class Manager {
     	String lat=(String) json.get("latitude");
     	String lon=(String) json.get("longitude");
     	String radius=(String) json.get("radius");
+		System.out.println("name: "+name+
+				"latitude: "+lat+
+					"longitude: "+lon+
+				"radius: "+radius);
     	System.out.println("Preparing for adding location...");
+
     	if(storage.addLocation(name, lat, lon, radius)){
-    		System.out.println("Location "+name+" added");
     		return json;
     	}
 		return null;
@@ -121,9 +125,8 @@ public class Manager {
     {
     	String lat=(String) json.get("latitude");
     	String lon=(String) json.get("longitude");
-    	String radius=(String) json.get("radius");
     	System.out.println("Preparing for adding location...");
-		return storage.getLocation(lat, lon, radius);
+		return storage.getLocation(lat, lon);
     }
     
     @RequestMapping(value="/sendpost", method={ RequestMethod.GET, RequestMethod.POST })

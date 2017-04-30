@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Storage {
@@ -15,6 +16,7 @@ public class Storage {
 	public Storage(){
 		location=new ArrayList<GPSLocation>();
 		user=new ArrayList<User>();
+		user.add(new User("a", "a"));
 	}
 	public boolean createUser(String username, String password){
 		if(user.size()!=0)
@@ -61,14 +63,19 @@ public class Storage {
 		return false;
 	}
 	public boolean addLocation(String name, String lat, String lon, String radius){
+
 		if(location.size()!=0)
 			for (GPSLocation tmplocation : location) {
-				if(tmplocation.getName().equals(name)&&
-						tmplocation.getLatitude()==Double.parseDouble(lat)&&
-						tmplocation.getLongitude()==Double.parseDouble(lon)){
+				if(tmplocation.getName().equals(name)||
+						(tmplocation.getLatitude()==Double.parseDouble(lat)&&
+						tmplocation.getLongitude()==Double.parseDouble(lon))){
 					return false;
 				}
 			}
+		System.out.println("Location added:\n"+"name: "+name+
+			"latitude: "+Double.parseDouble(lat)+
+				"longitude: "+Double.parseDouble(lon)+
+			"radius: "+Integer.parseInt(radius));
 		location.add(new GPSLocation(name, Double.parseDouble(lat), Double.parseDouble(lon), Integer.parseInt(radius)));
 		return true;
 	}
@@ -84,21 +91,25 @@ public class Storage {
 			}
 		return false;
 	}
-	public JSONObject getLocation(String lat, String lon, String radius) {
+	public JSONObject getLocation(String lat, String lon) {
 		JSONObject json=new JSONObject();
 		if(location.size()!=0)
 			for (int i=0;i<location.size();i++) {
-				JSONObject jsonLocation=new JSONObject();
-				
+				JSONArray jsonLocation = new JSONArray();
+				System.out.println("Distance between: "+location.get(i).getLatitude()+" --- "+location.get(i).getLongitude());
+				System.out.println("and: "+Double.parseDouble(lat)+" --- "+Double.parseDouble(lon));
+				System.out.println("is: "+Algorithm.distFrom(location.get(i).getLatitude(), location.get(i).getLongitude(), Double.parseDouble(lat), Double.parseDouble(lon))+"m");
 				if(Algorithm.distFrom(location.get(i).getLatitude(), location.get(i).getLongitude(), Double.parseDouble(lat), Double.parseDouble(lon))<=
 								location.get(i).getRadius()){
-					jsonLocation.put("name", location.get(i).getName());
-					jsonLocation.put("latitude", location.get(i).getLatitude());
-					jsonLocation.put("longitude", location.get(i).getLongitude());
-					jsonLocation.put("radius", location.get(i).getRadius());
+					
+					jsonLocation.add(location.get(i).getName());
+					jsonLocation.add(location.get(i).getLatitude());
+					jsonLocation.add(location.get(i).getLongitude());
+					jsonLocation.add(location.get(i).getRadius());
 					json.put("location"+i, jsonLocation);
 				}
 			}
+			System.out.println("json output: "+json.toJSONString());
 		return json;
 	}
 	public boolean userLocation(String username, String lat, String lon, String sessionid) {
