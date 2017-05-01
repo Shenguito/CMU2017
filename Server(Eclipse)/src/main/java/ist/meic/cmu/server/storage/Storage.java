@@ -146,17 +146,79 @@ public class Storage {
 		JSONObject json=new JSONObject();
 		if(post.size()!=0)
 			for (int i=0;i<post.size();i++) {
-				JSONObject jsonPost=new JSONObject();
+				JSONArray jsonPost = new JSONArray();
 				if(type.toJSONString().split(post.get(i).getType()).length>1)
 				if(Algorithm.distFrom(post.get(i).getLatitude(), post.get(i).getLongitude(), Double.parseDouble(lat), Double.parseDouble(lon))<=
 								post.get(i).getRadius()){
-					jsonPost.put("username", post.get(i).getUsername());
-					jsonPost.put("latitude", post.get(i).getLatitude());
-					jsonPost.put("longitude", post.get(i).getLongitude());
-					jsonPost.put("type", post.get(i).getRadius());
+					jsonPost.add(post.get(i).getUsername());
+					jsonPost.add(post.get(i).getLatitude());
+					jsonPost.add(post.get(i).getLongitude());
+					jsonPost.add(post.get(i).getRadius());
 					json.put("post"+i, jsonPost);
 				}
 			}
 		return json;
+	}
+	public boolean addProfile(String username, String sessionid, String key, String value) {
+		if(user.size()!=0)
+			for (User tmpUser : user) {
+				if(tmpUser.getUsername().equals(username)&&tmpUser.getSessionID().equals(sessionid)){
+					for(Profile profile:tmpUser.getProfile()){
+						if(profile.getKey().equals(key)&&profile.getValue().equals(value))
+						return false;
+					}
+					System.out.println("add: "+key+" : "+value);
+					tmpUser.addProfile(new Profile(key, value));
+					return true;
+				}
+			}
+		return false;
+	}
+	public JSONObject getProfile(String username, String sessionid) {
+		JSONObject json=new JSONObject();
+		if(user.size()!=0)
+			for (User tmpUser : user) {
+				if(tmpUser.getUsername().equals(username)&&tmpUser.getSessionID().equals(sessionid)){
+					for(int i=0; i<tmpUser.getProfile().size();i++){
+						JSONArray jsonProfile=new JSONArray();
+						jsonProfile.add(tmpUser.getProfile().get(i).getKey());
+						jsonProfile.add(tmpUser.getProfile().get(i).getValue());
+						json.put("profile"+i, jsonProfile);
+					}
+				}
+			}
+		return json;
+	}
+	public boolean removeProfile(String username, String sessionid, String key, String value) {
+		if(user.size()!=0)
+			for (User tmpUser : user) {
+				if(tmpUser.getUsername().equals(username)&&tmpUser.getSessionID().equals(sessionid)){
+					for(Profile profile:tmpUser.getProfile()){
+						if(profile.getKey().equals(key)&&profile.getValue().equals(value)){
+							tmpUser.removeProfile(key, value);
+							System.out.println("remove: "+key+" : "+value);
+							return true;
+						}
+					}
+				}
+			}
+		return false;
+	}
+	public boolean editProfile(String username, String sessionid, String oldkey, String oldvalue, String newkey,
+			String newvalue) {
+		JSONObject json=new JSONObject();
+		if(user.size()!=0)
+			for (User tmpUser : user) {
+				if(tmpUser.getUsername().equals(username)&&tmpUser.getSessionID().equals(sessionid)){
+					for(int i=0; i<tmpUser.getProfile().size();i++){
+						if(tmpUser.getProfile().get(i).getKey().equals(oldkey)&&tmpUser.getProfile().get(i).getValue().equals(oldvalue)){
+							tmpUser.getProfile().get(i).setKey(newkey);
+							tmpUser.getProfile().get(i).setValue(newvalue);
+							return true;
+						}
+					}
+				}
+			}
+		return false;
 	}
 }

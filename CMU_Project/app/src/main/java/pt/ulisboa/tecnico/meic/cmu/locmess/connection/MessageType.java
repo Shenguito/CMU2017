@@ -6,6 +6,8 @@ public enum MessageType {
     logout,
     getprofile,
     sendprofile,
+    deleteprofile,
+    editprofile,
     createlocation,
     removelocation,
     checklocation,

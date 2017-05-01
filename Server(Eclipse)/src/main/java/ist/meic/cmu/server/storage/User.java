@@ -1,10 +1,12 @@
 package ist.meic.cmu.server.storage;
 
+import java.util.ArrayList;
+
 public class User {
 	private String username;
 	private String password;
 	private String sessionID;
-	private Profile profile;
+	private ArrayList<Profile> profile=new ArrayList<Profile>();
 
 	public User(String username, String password) {
 		this.username = username;
@@ -26,11 +28,20 @@ public class User {
 	public String getUsername() {
 		return username;
 	}
-	public Profile getProfile() {
+	public ArrayList<Profile> getProfile() {
 		return profile;
 	}
-	public void setProfile(Profile profile) {
-		this.profile = profile;
+	public void addProfile(Profile profile) {
+		this.profile.add(profile);
+	}
+	public void removeProfile(String key, String value) {
+		Profile realProfile=null;
+		for(Profile profile: this.profile){
+			if(profile.getKey().equals(key)&&profile.getValue().equals(value)){
+				realProfile=profile;
+			}
+		}
+		this.profile.remove(realProfile);
 	}
 	
 }

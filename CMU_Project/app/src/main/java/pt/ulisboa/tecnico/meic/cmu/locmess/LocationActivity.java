@@ -78,17 +78,9 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
                 GPS location = new GPS(result[0], result[1], result[2], result[3]);
                 list.add(location);
             }
-/*
-            if(json!=null) {
-                Toast.makeText(this, json.toJSONString(), Toast.LENGTH_LONG).show();
-            }else{
-                Toast.makeText(this, "fail search", Toast.LENGTH_LONG).show();
-            }*/
+
         }
-        for (int i = 0; i < 2; i++) {
-            GPS location = new GPS("Location GPS" + i, "12.4" + i, "125.3" + i,"20");
-            list.add(location);
-        }
+
         for (int i = 0; i < 2; i++) {
             Wifi location = new Wifi("Location Wifi " + i, "Mac Address" + i);
             list.add(location);
@@ -109,6 +101,7 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
 
     public void removeLocation(int position){
         //TODO
+
         locations.remove(position);
         adapter.notifyItemRemoved(position);
     }

@@ -11,4 +11,9 @@ public class StringParser {
 
         return output;
     }
+    public static String[] getProfile(String input){
+        String tmp=input.substring(input.indexOf("[") + 1, input.indexOf("]"));
+        String[] output=tmp.split(",");
+        return output;
+    }
 }

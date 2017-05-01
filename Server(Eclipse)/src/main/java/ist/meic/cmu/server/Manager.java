@@ -125,7 +125,7 @@ public class Manager {
     {
     	String lat=(String) json.get("latitude");
     	String lon=(String) json.get("longitude");
-    	System.out.println("Preparing for adding location...");
+    	System.out.println("Preparing for get location...");
 		return storage.getLocation(lat, lon);
     }
     
@@ -174,13 +174,59 @@ public class Manager {
     @ResponseBody
     public JSONObject getProfile(@RequestBody JSONObject json)
     {
-        return null;
+    	String username=(String) json.get("username");
+    	String sessionid=(String) json.get("sessionid");
+    	System.out.println("Preparing for get profile...");
+		return storage.getProfile(username, sessionid);
     }
     
     @RequestMapping(value="/sendprofile", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public JSONObject sendProfile(@RequestBody JSONObject json)
     {
+    	String username=(String) json.get("username");
+		String sessionid=(String) json.get("sessionid");
+		String key=(String) json.get("key");
+		String value=(String) json.get("value");
+		System.out.println("Preparing for add profile...");
+		if(storage.addProfile(username, sessionid, key, value)){
+			System.out.println(key+":"+value+ " added to: "+username);
+			return json;
+		}
+        return null;
+    }
+    
+    @RequestMapping(value="/deleteprofile", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject deleteProfile(@RequestBody JSONObject json)
+    {
+    	String username=(String) json.get("username");
+		String sessionid=(String) json.get("sessionid");
+		String key=(String) json.get("key");
+		String value=(String) json.get("value");
+		System.out.println("Preparing for delete profile... "+key+":"+value);
+		if(storage.removeProfile(username, sessionid, key, value)){
+			System.out.println(key+":"+value+ " removed from: "+username);
+			return json;
+		}
+        return null;
+    }
+    
+    @RequestMapping(value="/editprofile", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject editProfile(@RequestBody JSONObject json)
+    {
+    	String username=(String) json.get("username");
+		String sessionid=(String) json.get("sessionid");
+		String oldkey=(String) json.get("oldkey");
+		String oldvalue=(String) json.get("oldvalue");
+		String newkey=(String) json.get("newkey");
+		String newvalue=(String) json.get("newvalue");
+		System.out.println("Preparing for edit profile..."+oldkey+":"+oldvalue+"\nto new: "+newkey+":"+newvalue);
+		if(storage.editProfile(username, sessionid, oldkey, oldvalue, newkey, newvalue)){
+			System.out.println(oldkey+":"+oldvalue+ " edited from: "+username+" to :"+newkey+":"+newvalue);
+			return json;
+		}
         return null;
     }
     

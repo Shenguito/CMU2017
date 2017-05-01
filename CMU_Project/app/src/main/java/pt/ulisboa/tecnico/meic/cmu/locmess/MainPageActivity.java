@@ -84,6 +84,8 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
 
     private void setupRecyclerView(){
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //create Post
         posts = Post.createPostList(20);
         notesAdapter = new NotesAdapter(this, posts);
         recyclerView.setAdapter(notesAdapter);

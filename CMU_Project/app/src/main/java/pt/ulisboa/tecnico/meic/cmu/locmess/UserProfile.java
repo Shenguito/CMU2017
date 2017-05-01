@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Action;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Connection;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.MessageType;
+import pt.ulisboa.tecnico.meic.cmu.locmess.tool.StringParser;
 
 /**
  * Created by Akilino on 02/04/2017.
@@ -43,18 +44,25 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
     ArrayList<Property> properties;
     private PropertiesAdapterUser adapter;
     private Property property;
-    String username;
     RecyclerView recyclerView;
     String[] keys;
     ArrayList<String> keysList;
 
+    SharedPreferences sharedPref;
+    String username;
+    String sessionid;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        sharedPref = getSharedPreferences("file", Context.MODE_PRIVATE);
+        boolean logged= sharedPref.getBoolean("logged", false);
+        if(logged==true) {
+            username = sharedPref.getString("username", null);
+            sessionid = sharedPref.getString("sessionid", null);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
-        Intent intent = getIntent();
-        username = intent.getStringExtra("username");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.user_profile);
@@ -75,6 +83,22 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(createHelperCallback());
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        JSONObject json=new JSONObject();
+
+        json.put("username", username);
+        json.put("sessionid", sessionid);
+        Action action =new Action(MessageType.getprofile, json);
+        json=new Connection().execute(action);
+        for(int i=0; json.get("profile"+i)!=null;i++) {
+
+            String[] result= StringParser.getProfile(json.get("profile"+i).toString());
+            Toast.makeText(this,result[0]+" : "+result[1]+" : "+i, Toast.LENGTH_SHORT).show();
+
+            properties.add(0, new Property(result[0], result[1]));
+            adapter.notifyItemInserted(0);
+        }
+
     }
 
     public void setupRecyclerView(){
@@ -127,9 +151,6 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
     }
 
     public void logout(){
-        SharedPreferences sharedPref = getSharedPreferences("file", Context.MODE_PRIVATE);
-        String username=sharedPref.getString("username", null);
-        String sessionid=sharedPref.getString("sessionid", null);
         JSONObject json=new JSONObject();
         json.put("username", username);
         json.put("sessionid", sessionid);
@@ -185,9 +206,24 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
                                 }
 
                                 Toast.makeText(UserProfile.this, "value: " + key + ":" + value, Toast.LENGTH_SHORT).show();
-                                properties.add(0,property);
-                                adapter.notifyItemInserted(0);
+
+                                JSONObject json=new JSONObject();
+
+                                json.put("username", username);
+                                json.put("sessionid", sessionid);
+                                json.put("key", property.getKey().trim());
+                                json.put("value", property.getValue().trim());
+                                Action action =new Action(MessageType.sendprofile, json);
+                                json=new Connection().execute(action);
+                                if(json!=null){
+                                    properties.add(0,property);
+                                    adapter.notifyItemInserted(0);
+                                }else{
+                                    Toast.makeText(UserProfile.this, "it's not added value: " + key + ":" + value, Toast.LENGTH_SHORT).show();
+                                }
                                 //adapter.notifyItemInserted(properties.size());
+
+
                             }
                         })
                 .setNegativeButton("Cancel",
@@ -235,18 +271,33 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
                                 key = keyValue.getText().toString();
                                 value = valueValue.getText().toString();
 
-                                property = new Property(key, value);
+                                JSONObject json=new JSONObject();
 
-                                if(!keysList.contains(key)){
-                                    keysList.add(key);
+                                json.put("username", username);
+                                json.put("sessionid", sessionid);
+                                json.put("oldkey", properties.get(position).getKey().trim());
+                                json.put("oldvalue", properties.get(position).getValue().trim());
+                                json.put("newkey", key.trim());
+                                json.put("newvalue", value.trim());
+                                Action action =new Action(MessageType.editprofile, json);
+                                json=new Connection().execute(action);
+
+                                if(json!=null) {
+                                    property = new Property(key, value);
+
+                                    if (!keysList.contains(key)) {
+                                        keysList.add(key);
+                                        adapter.notifyDataSetChanged();
+                                    }
+
+                                    Toast.makeText(UserProfile.this, "value: " + key + ":" + value, Toast.LENGTH_SHORT).show();
+
+                                    properties.add(position, property);
+                                    properties.remove(position + 1);
                                     adapter.notifyDataSetChanged();
+                                }else{
+                                    Toast.makeText(UserProfile.this, "profile edit error: " + key + ":" + value, Toast.LENGTH_SHORT).show();
                                 }
-
-                                Toast.makeText(UserProfile.this, "value: " + key + ":" + value, Toast.LENGTH_SHORT).show();
-
-                                properties.add(position,property);
-                                properties.remove(position+1);
-                                adapter.notifyDataSetChanged();
 
                             }
                         })
@@ -290,8 +341,20 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
                 .setNegativeButton("Delete",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
-                                properties.remove(position);
-                                adapter.notifyItemRemoved(position);
+                                JSONObject json=new JSONObject();
+                                json.put("username", username);
+                                json.put("sessionid", sessionid);
+                                json.put("key",properties.get(position).getKey().trim());
+                                json.put("value",properties.get(position).getValue().trim());
+                                Action action =new Action(MessageType.deleteprofile, json);
+                                json=new Connection().execute(action);
+                                if(json!=null) {
+                                    properties.remove(position);
+                                    adapter.notifyItemRemoved(position);
+                                }else{
+                                    Toast.makeText(UserProfile.this, "Fail delete: " + properties.get(position).getKey() + " : " +
+                                            properties.get(position).getValue(), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         });
 
