@@ -368,7 +368,6 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
     public void onItemClick(int p) {
         openDialogViewProperty(p);
 
-        Toast.makeText(this, "Position " + p, Toast.LENGTH_SHORT).show();
     }
 
     private ItemTouchHelper.Callback createHelperCallback(){

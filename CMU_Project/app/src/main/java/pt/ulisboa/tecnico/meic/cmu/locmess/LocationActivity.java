@@ -60,6 +60,7 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
 
     public ArrayList<Location> populateView() {
         list = new ArrayList<>();
+
         SharedPreferences sharedPref = this.getSharedPreferences("file", Context.MODE_PRIVATE);
         boolean locationExists= sharedPref.getBoolean("location", false);
         if(locationExists==true){

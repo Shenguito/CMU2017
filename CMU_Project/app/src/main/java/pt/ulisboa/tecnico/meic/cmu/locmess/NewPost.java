@@ -4,8 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -20,22 +18,21 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -72,7 +69,9 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
         setSupportActionBar(toolbar);
 
         locationSpinner = (Spinner) findViewById(R.id.locationSpinner);
-        populateSpinner();
+
+        //TODO
+        //populateSpinner();
 
         calendar = Calendar.getInstance();
 
