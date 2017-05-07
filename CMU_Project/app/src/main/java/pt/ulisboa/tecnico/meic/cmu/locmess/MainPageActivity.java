@@ -22,12 +22,14 @@ import android.widget.Toast;
 
 import org.json.simple.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Action;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Connection;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.MessageType;
 import pt.ulisboa.tecnico.meic.cmu.locmess.service.BackgroundLocation;
+import pt.ulisboa.tecnico.meic.cmu.locmess.tool.StringParser;
 
 /**
  * Created by Akilino on 09/03/2017.
@@ -43,7 +45,7 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
 
     private CurrentLocation currentLocation;
 
-    private ArrayList<Post> posts;
+    private ArrayList<Post> posts=new ArrayList<Post>();
     private Toolbar toolbar;
     private NotesAdapter notesAdapter;
     private FloatingActionButton floatingActionButton,floatingActionButtonCompass,floatingActionButtonPost;
@@ -85,11 +87,42 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
     private void setupRecyclerView(){
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //create Post
-        posts = Post.createPostList(20);
-        notesAdapter = new NotesAdapter(this, posts);
-        recyclerView.setAdapter(notesAdapter);
-        notesAdapter.setItemClickCallback(this);
+        SharedPreferences sharedPref = this.getSharedPreferences("file", Context.MODE_PRIVATE);
+        boolean logged= sharedPref.getBoolean("logged", false);
+
+        if(logged==true){
+            String username=sharedPref.getString("username", null);
+            String lat=sharedPref.getString("latitude", null);
+            String lon=sharedPref.getString("longitude", null);
+            posts = getPostList(username, lat, lon);
+            notesAdapter = new NotesAdapter(this, posts);
+            recyclerView.setAdapter(notesAdapter);
+            notesAdapter.setItemClickCallback(this);
+        }
+
+    }
+
+    private ArrayList<Post> getPostList(String username, String lat, String lon){
+        JSONObject json = new JSONObject();
+
+        json.put("username", username);
+        json.put("latitude", lat);
+        json.put("longitude", lon);
+
+        Action action = new Action(MessageType.checkpost, json);
+        json = new Connection().execute(action);
+        if(json!=null){
+            for(int i=0; json.get("post"+i)!=null;i++) {
+
+                String[] result= StringParser.getPost(json.get("post"+i).toString());
+                try {
+                    posts.add(new Post(result[0].trim(), result[1].trim(), result[5].trim(), result[2].trim(), result[7].trim()));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return posts;
     }
 
     private void handleFloatingActionButton(){
@@ -260,6 +293,26 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
     }
 
     public void unpostPost(int position){
+        //TODO
+        JSONObject json = new JSONObject();
+
+        json.put("username", username);
+        json.put("message", posts.get(position).getMessage());
+        json.put("title", posts.get(position).getTitle());
+        json.put("location", posts.get(position).getLocation());
+
+        Action action = new Action(MessageType.deletepost, json);
+        json = new Connection().execute(action);
+        if(json!=null){
+            for(int i=0; json.get("post"+i)!=null;i++) {
+                String[] result= StringParser.getPost(json.get("post"+i).toString());
+                try {
+                    posts.add(new Post(result[0], result[1], result[5], result[2], result[7]));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         posts.remove(position);
         notesAdapter.notifyItemRemoved(position);
     }

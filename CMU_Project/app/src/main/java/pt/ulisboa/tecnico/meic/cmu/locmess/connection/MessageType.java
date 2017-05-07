@@ -12,5 +12,8 @@ public enum MessageType {
     removelocation,
     checklocation,
     editlocation,
-    userlocation
+    userlocation,
+    sendpost,
+    checkpost,
+    deletepost
 }

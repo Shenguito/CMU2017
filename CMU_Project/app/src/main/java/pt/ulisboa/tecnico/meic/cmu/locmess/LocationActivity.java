@@ -47,7 +47,7 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerViewLocation);
 
-
+        SharedPreferences sharedPref = this.getSharedPreferences("file", Context.MODE_PRIVATE);
         locations = populateView();
 
 
@@ -60,7 +60,6 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
 
     public ArrayList<Location> populateView() {
         list = new ArrayList<>();
-
         SharedPreferences sharedPref = this.getSharedPreferences("file", Context.MODE_PRIVATE);
         boolean locationExists= sharedPref.getBoolean("location", false);
         if(locationExists==true){
@@ -72,9 +71,12 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
             Action action = new Action(MessageType.checklocation, json);
             json = new Connection().execute(action);
             JSONArray msg;
-            for(int i=0;json.get("location"+i)!=null;i++){
-                String[] result=StringParser.getLocation(json.get("location"+i).toString());
-                Toast.makeText(this,result[0]+" : "+result[3], Toast.LENGTH_LONG).show();
+            for(int i=0, j=0;i<json.size();i++, j++){
+                while(json.get("location"+j)==null) {
+                    j++;
+                }
+                String[] result=StringParser.getLocation(json.get("location"+j).toString());
+                Toast.makeText(this,result[0]+" : "+result[3], Toast.LENGTH_SHORT).show();
 
                 GPS location = new GPS(result[0], result[1], result[2], result[3]);
                 list.add(location);

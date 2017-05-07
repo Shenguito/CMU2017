@@ -1,5 +1,7 @@
 package ist.meic.cmu.server.storage;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,6 +9,8 @@ import java.util.Random;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import ist.meic.cmu.server.tool.StringParser;
 
 public class Storage {
 
@@ -16,6 +20,7 @@ public class Storage {
 	public Storage(){
 		location=new ArrayList<GPSLocation>();
 		user=new ArrayList<User>();
+		post=new ArrayList<Post>();
 		user.add(new User("a", "a"));
 	}
 	public boolean createUser(String username, String password){
@@ -116,49 +121,92 @@ public class Storage {
 		
 		return true;
 	}
-	public boolean sendPost(String username, String lat, String lon, String radius, String type) {
+	public boolean sendPost(String title, String message, String username, String startDate, String endDate, String location, String filder, String mode, String profile) {
 		if(post.size()!=0)
 			for(Post p:post){
-				if(p.getUsername().equals("username")
-						&& String.valueOf(p.getLatitude()).equals(lat)
-						&& String.valueOf(p.getLongitude()).equals(lon)){
+				if(p.getTitle().equals(title)
+						&& p.getMessage().equals(message)
+						&& p.getUsername().equals(username)
+						&& p.getLocation().equals(location)){
 					return false;
 				}
 			}
-		post.add(new Post(username, Double.parseDouble(lat), Double.parseDouble(lon), Integer.parseInt(radius), type));
+		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm");
+		Date start=null;
+		Date end=null;
+		try {
+			start = format.parse(startDate);
+			end = format.parse(endDate);
+		} catch (ParseException e) {
+			System.out.println("Date format error!!!");
+			return false;
+		}
+		
+		ArrayList<Profile> prof=new ArrayList<>();
+		String[] profileParser=StringParser.getProfile(profile);
+		for(int i=0;i<profileParser.length;i+=2){
+			prof.add(new Profile(profileParser[i], profileParser[i+1]));
+		}
+		post.add(new Post(title, message, username, start, end, location, filder, mode, prof));
 		return true;
 	}
-	public boolean deletePost(String username, String lat, String lon) {
+	public JSONObject getPost(String username, String latitude, String longitude) {
+		JSONObject json=new JSONObject();
+		ArrayList<Profile> profile=new ArrayList<Profile>();
+		if(user.size()!=0&&post.size()!=0&&location.size()!=0){
+			for (int i=0;i<user.size();i++) {
+				if(user.get(i).getUsername().equals(username)){
+					profile=user.get(i).getProfile();
+					break;
+				}
+			}
+			for(int i=0,w=0;i<location.size();i++){
+				if(Algorithm.distFrom(location.get(i).getLatitude(), location.get(i).getLongitude(), Double.parseDouble(latitude), Double.parseDouble(longitude))<=
+								location.get(i).getRadius()){
+					for(int j=0 ; j<post.size();j++){
+						JSONArray arrayPost=new JSONArray();
+						if(post.get(j).getLocation().equals(location.get(i).getName())){
+							for(Profile p:post.get(j).getProfile()){
+								if(profile.contains(p)){
+									arrayPost.add(post.get(j).getTitle());
+									arrayPost.add(post.get(j).getMessage());
+									arrayPost.add(post.get(j).getUsername());
+									arrayPost.add(post.get(j).getStartDate());
+									arrayPost.add(post.get(j).getEndDate());
+									arrayPost.add(post.get(j).getLocation());
+									arrayPost.add(post.get(j).getFilder());
+									arrayPost.add(post.get(j).getMode());
+									arrayPost.add(post.get(j).getProfileString());
+									
+									json.put("post"+w, arrayPost);
+									w++;
+									//bug, may cause problem
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		System.out.println("Post result: "+json.toJSONString());
+		return json;
+	}
+	public boolean deletePost(String title, String message, String username, String location) {
 		if(post.size()!=0)
 			for(Post p:post){
-				if(p.getUsername().equals("username")
-						&& String.valueOf(p.getLatitude()).equals(lat)
-						&& String.valueOf(p.getLongitude()).equals(lon)){
+				if(p.getTitle().equals(title)
+						&& p.getMessage().equals(message)
+						&& p.getUsername().equals(username)
+						&& p.getLocation().equals(location)){
 					post.remove(p);
+					System.out.println("Remove successful");
 					return true;
 				}
 			}
 		return false;
 	}
 	
-	//maybe it's not necessary-2 (there is 1)
-	public JSONObject getPost(String lat, String lon, JSONObject type) {
-		JSONObject json=new JSONObject();
-		if(post.size()!=0)
-			for (int i=0;i<post.size();i++) {
-				JSONArray jsonPost = new JSONArray();
-				if(type.toJSONString().split(post.get(i).getType()).length>1)
-				if(Algorithm.distFrom(post.get(i).getLatitude(), post.get(i).getLongitude(), Double.parseDouble(lat), Double.parseDouble(lon))<=
-								post.get(i).getRadius()){
-					jsonPost.add(post.get(i).getUsername());
-					jsonPost.add(post.get(i).getLatitude());
-					jsonPost.add(post.get(i).getLongitude());
-					jsonPost.add(post.get(i).getRadius());
-					json.put("post"+i, jsonPost);
-				}
-			}
-		return json;
-	}
 	public boolean addProfile(String username, String sessionid, String key, String value) {
 		if(user.size()!=0)
 			for (User tmpUser : user) {

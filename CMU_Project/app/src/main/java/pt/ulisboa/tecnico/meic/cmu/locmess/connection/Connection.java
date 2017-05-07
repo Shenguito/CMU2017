@@ -5,7 +5,6 @@ package pt.ulisboa.tecnico.meic.cmu.locmess.connection;
  */
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.simple.JSONObject;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -38,7 +37,6 @@ public class Connection {
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 JSONObject response = restTemplate.postForObject(url, action.getJSON(), JSONObject.class);
-                Log.d("Test3", response.toJSONString());
                 return response;
             } catch (Exception e) {
                 e.printStackTrace();

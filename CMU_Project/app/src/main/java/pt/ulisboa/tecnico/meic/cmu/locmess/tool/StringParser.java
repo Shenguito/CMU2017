@@ -16,4 +16,9 @@ public class StringParser {
         String[] output=tmp.split(",");
         return output;
     }
+    public static String[] getPost(String input){
+        String tmp=input.substring(input.indexOf("[") + 1, input.indexOf("]"));
+        String[] output=tmp.split(",");
+        return output;
+    }
 }

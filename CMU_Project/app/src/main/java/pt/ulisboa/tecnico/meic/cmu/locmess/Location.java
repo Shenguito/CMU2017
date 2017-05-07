@@ -12,4 +12,8 @@ public abstract class Location{
         this.locationName = locationName;
     }
 
+    public String getName(){
+        return locationName;
+    }
+
 }

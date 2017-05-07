@@ -175,11 +175,9 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
                 json = new Connection().execute(action);
                 if(json!=null){
                     Toast.makeText(this, "Location successfuly created!", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(this, "Location can't be created!", Toast.LENGTH_SHORT).show();
                 }
-
-                Toast.makeText(this, "Location can't be created!", Toast.LENGTH_SHORT).show();
-                //TODO location added
-
 
                 finish();
             }else{

@@ -2,7 +2,9 @@ package pt.ulisboa.tecnico.meic.cmu.locmess;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,12 +31,20 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Action;
+import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Connection;
+import pt.ulisboa.tecnico.meic.cmu.locmess.connection.MessageType;
+import pt.ulisboa.tecnico.meic.cmu.locmess.tool.StringParser;
 
 /**
  * Created by Akilino on 16/03/2017.
@@ -44,7 +54,8 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
 
     private ArrayList<Property> properties;
     private Toolbar toolbar;
-    private EditText fromDateEditText, fromTimeEditText, toDateEditText, toTimeEditText;
+    private EditText fromDateEditText, fromTimeEditText, toDateEditText, toTimeEditText, titleEditText, messageEditText;
+    private String filder, mode;
     private Calendar calendar;
     private Spinner locationSpinner;
     private PropertiesAdapter adapter;
@@ -56,6 +67,7 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
     ArrayList<String> keysList;
     List<String> spinnerArray = new ArrayList<>();
     LocationActivity locationActivity = new LocationActivity();
+    ArrayList<Location> locationList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -70,8 +82,7 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
 
         locationSpinner = (Spinner) findViewById(R.id.locationSpinner);
 
-        //TODO
-        //populateSpinner();
+        populateSpinner();
 
         calendar = Calendar.getInstance();
 
@@ -79,6 +90,8 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
         fromTimeEditText = (EditText) findViewById(R.id.fromTimeEditText);
         toDateEditText = (EditText) findViewById(R.id.toDateEditText);
         toTimeEditText = (EditText) findViewById(R.id.toTimeEditText);
+        titleEditText = (EditText) findViewById(R.id.titleTextView);
+        messageEditText = (EditText) findViewById(R.id.messageEditText);
 
         addButton = (Button) findViewById(R.id.addButton);
 
@@ -180,11 +193,36 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
     };
 
     public void populateSpinner(){
+        SharedPreferences sharedPref = this.getSharedPreferences("file", Context.MODE_PRIVATE);
+        boolean locationExists= sharedPref.getBoolean("location", false);
+        if(locationExists==true){
+            String lat=sharedPref.getString("latitude", null);
+            String lon=sharedPref.getString("longitude", null);
+            JSONObject json = new JSONObject();
+            json.put("latitude", lat);
+            json.put("longitude", lon);
+            Action action = new Action(MessageType.checklocation, json);
+            json = new Connection().execute(action);
 
-        ArrayList<Location> locationList = locationActivity.populateView();
-        int size = locationActivity.populateView().size();
+            for(int i=0, j=0;i<json.size();i++, j++){
+                while(json.get("location"+j)==null) {
+                    j++;
+                }
+                String[] result=StringParser.getLocation(json.get("location"+j).toString());
+                Toast.makeText(this,result[0]+" : "+result[3], Toast.LENGTH_SHORT).show();
 
-        for(int i = 0; i < size; i++){
+                GPS location = new GPS(result[0], result[1], result[2], result[3]);
+                locationList.add(location);
+            }
+
+
+        }
+
+        for (int i = 0; i < 2; i++) {
+            Wifi location = new Wifi("Location Wifi " + i, "Mac Address" + i);
+            locationList.add(location);
+        }
+        for(int i = 0; i < locationList.size(); i++){
             spinnerArray.add(locationList.get(i).locationName);
         }
 
@@ -249,6 +287,44 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
         int id = item.getItemId();
 
         if(id == R.id.action_create){
+            SharedPreferences sharedPref = this.getSharedPreferences("file", Context.MODE_PRIVATE);
+            boolean locationExists= sharedPref.getBoolean("logged", false);
+            if(locationExists==true){
+                String username=sharedPref.getString("username", null);
+                String startData= (fromDateEditText.getText()+" "+fromTimeEditText.getText()).trim();
+                String endData=(toDateEditText.getText()+" "+toTimeEditText.getText()).trim();
+                String title=titleEditText.getText().toString().trim();
+                String message=messageEditText.getText().toString().trim();
+
+                String location = locationSpinner.getSelectedItem().toString().trim();
+
+                if(title!=null && message!=null && filder!=null && mode!=null) {
+                    JSONObject json = new JSONObject();
+                    json.put("username", username);
+                    json.put("title", title);
+                    json.put("message", message);
+                    json.put("startDate", startData);
+                    json.put("endDate", endData);
+                    json.put("location", location);
+                    json.put("filder", filder);
+                    json.put("mode", mode);
+
+
+                    JSONArray arrayProfile = new JSONArray();
+                    for (int j=0; j<properties.size();j++) {
+                        arrayProfile.add(properties.get(j).getKey());
+                        arrayProfile.add(properties.get(j).getValue());
+                    }
+                    json.put("profile", arrayProfile.toJSONString());
+                    Toast.makeText(NewPost.this, arrayProfile.toJSONString(), Toast.LENGTH_LONG).show();
+                    Action action = new Action(MessageType.sendpost, json);
+                    json = new Connection().execute(action);
+                    if(json!=null){
+
+                    }
+                }
+
+            }
             Toast.makeText(this, "Post successfuly created!", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -442,19 +518,19 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
         switch(view.getId()) {
             case R.id.whiteListRadioButton:
                 if (checked)
-                    Toast.makeText(this, "whitelist", Toast.LENGTH_SHORT).show();
+                    filder="Whitelist";
                     break;
             case R.id.blackListRadioButton:
                 if (checked)
-                    Toast.makeText(this, "blacklist", Toast.LENGTH_SHORT).show();
+                    filder="Blacklist";
                     break;
             case R.id.decentralizedRadioButton:
                 if(checked)
-                    Toast.makeText(this, "decentralized", Toast.LENGTH_SHORT).show();
+                    mode="Centralized";
                     break;
             case R.id.centralizedModeRadioButton:
                 if(checked)
-                    Toast.makeText(this, "centralized", Toast.LENGTH_SHORT).show();
+                    mode="Descentralized";
                     break;
         }
     }

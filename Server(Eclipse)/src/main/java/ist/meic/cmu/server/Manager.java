@@ -1,10 +1,11 @@
 package ist.meic.cmu.server;
-import ist.meic.cmu.server.storage.GPSLocation;
 import ist.meic.cmu.server.storage.Storage;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,6 +68,8 @@ public class Manager {
         return null;
     }
     
+    
+    //TODO, don't know if it's necessary
     @RequestMapping(value="/userlocation", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public JSONObject userLocation(@RequestBody JSONObject json)
@@ -134,26 +137,24 @@ public class Manager {
     public JSONObject sendPost(@RequestBody JSONObject json)
     {
     	String username=(String) json.get("username");
-    	String lat=(String) json.get("latitude");
-    	String lon=(String) json.get("longitude");
-    	String radius=(String) json.get("radius");
-    	String type=(String) json.get("type");
+    	String name=(String) json.get("title");
+    	String message=(String) json.get("message");
+    	String startDate=(String) json.get("startDate");
+    	String endDate=(String) json.get("endDate");
+    	String location=(String) json.get("location");
+    	String filder=(String) json.get("filder");
+    	String mode=(String) json.get("mode");
+    	String profile=(String) json.get("profile");
     	System.out.println("Preparing for adding post...");
-    	if(storage.sendPost(username, lat, lon, radius, type)){
-    		return json;
-    	}
-		return null;
-    }
-    
-    @RequestMapping(value="/deletepost", method={ RequestMethod.GET, RequestMethod.POST })
-    @ResponseBody
-    public JSONObject deletePost(@RequestBody JSONObject json)
-    {
-    	String username=(String) json.get("username");
-    	String lat=(String) json.get("latitude");
-    	String lon=(String) json.get("longitude");
-    	System.out.println("Preparing for deleting post...");
-    	if(storage.deletePost(username, lat, lon)){
+    	System.out.println("SendPost: "+username+
+    			"\n"+name+
+    			"\n"+startDate+
+    			"\n"+endDate+
+    			"\n"+location+
+    			"\n"+filder+
+    			"\n"+mode+
+    			"\n"+profile);
+    	if(storage.sendPost(name, message, username, startDate, endDate, location, filder, mode, profile)){
     		return json;
     	}
 		return null;
@@ -163,11 +164,27 @@ public class Manager {
     @ResponseBody
     public JSONObject getPost(@RequestBody JSONObject json)
     {
-    	String lat=(String) json.get("latitude");
-    	String lon=(String) json.get("longitude");
-    	JSONObject type=(JSONObject) json.get("type");
+    	String username=(String) json.get("username");
+    	String latitude=(String) json.get("latitude");
+    	String longitude=(String) json.get("longitude");
+
     	System.out.println("Preparing for get post...");
-		return storage.getPost(lat, lon, type);
+		return storage.getPost(username, latitude, longitude);
+    }
+    
+    @RequestMapping(value="/deletepost", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject deletePost(@RequestBody JSONObject json)
+    {
+    	String title=(String) json.get("title");
+    	String message=(String) json.get("message");
+    	String username=(String) json.get("username");
+    	String location=(String) json.get("location");
+    	System.out.println("Preparing for deleting post...");
+    	if(storage.deletePost(title, message, username, location)){
+    		return json;
+    	}
+		return null;
     }
 
     @RequestMapping(value="/getprofile", method={ RequestMethod.GET, RequestMethod.POST })
@@ -228,17 +245,6 @@ public class Manager {
 			return json;
 		}
         return null;
-    }
-    
-    
-	@RequestMapping("/")
-	@SuppressWarnings("unchecked")
-    public ArrayList<GPSLocation> test()
-    {
-		ArrayList<GPSLocation> location=new ArrayList<GPSLocation>();
-    	location.add(new GPSLocation("Sheng", 32.3213,-9.3213, 10));
-    	location.add(new GPSLocation("Arlindo", 32.3323,-9.5413, 6));
-        return location;
     }
 	
     /*
