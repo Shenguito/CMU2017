@@ -12,8 +12,8 @@ public class Post {
 	private String location;
 	private String filter;
 	private String mode;
-	private ArrayList<Profile> profile=new ArrayList<Profile>();
-	public Post(String title, String message, String username, Date startDate, Date endDate, String location, String filter, String mode, ArrayList<Profile> profile) {
+	private ArrayList<Property> property=new ArrayList<Property>();
+	public Post(String title, String message, String username, Date startDate, Date endDate, String location, String filter, String mode, ArrayList<Property> property) {
 		this.title=title;
 		this.message=message;
 		this.username = username;
@@ -22,7 +22,7 @@ public class Post {
 		this.location=location;
 		this.filter=filter;
 		this.mode=mode;
-		this.profile = profile;
+		this.property = property;
 	}
 	public String getTitle() {
 		return title;
@@ -72,26 +72,26 @@ public class Post {
 	public void setMode(String mode) {
 		this.mode = mode;
 	}
-	public ArrayList<Profile> getProfile() {
-		return profile;
+	public ArrayList<Property> getProperty() {
+		return property;
 	}
-	public String getProfileString(){
+	public String getPropertyString(){
 		String result="";
-		for(Profile p:profile){
+		for(Property p:property){
 			result+=p.getKey()+","+p.getValue()+"-";
 		}
 		return result;
 	}
-	public boolean addProfile(Profile profile) {
-		if(this.profile.size()!=0&&this.profile.contains(profile)){
+	public boolean addProperty(Property property) {
+		if(this.property.size()!=0&&this.property.contains(property)){
 			return false;
 		}
-		this.profile.add(profile);
+		this.property.add(property);
 		return true;
 	}
-	public boolean removeProfile(Profile profile) {
-		if(this.profile.size()!=0&&this.profile.contains(profile)){
-			this.profile.remove(profile);
+	public boolean removeProperty(Property property) {
+		if(this.property.size()!=0&&this.property.contains(property)){
+			this.property.remove(property);
 			return true;
 		}
 		return false;

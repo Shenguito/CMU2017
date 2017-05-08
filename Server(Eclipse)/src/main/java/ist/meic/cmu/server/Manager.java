@@ -144,7 +144,7 @@ public class Manager {
     	String location=(String) json.get("location");
     	String filter=(String) json.get("filter");
     	String mode=(String) json.get("mode");
-    	String profile=(String) json.get("profile");
+    	String property=(String) json.get("property");
     	System.out.println("Preparing for adding post...");
     	System.out.println("SendPost: "+username+
     			"\n"+name+
@@ -153,8 +153,8 @@ public class Manager {
     			"\n"+location+
     			"\n"+filter+
     			"\n"+mode+
-    			"\n"+profile);
-    	if(storage.sendPost(name, message, username, startDate, endDate, location, filter, mode, profile)){
+    			"\n"+property);
+    	if(storage.sendPost(name, message, username, startDate, endDate, location, filter, mode, property)){
     		return json;
     	}
 		return null;
@@ -187,51 +187,51 @@ public class Manager {
 		return null;
     }
 
-    @RequestMapping(value="/getprofile", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/getproperty", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
-    public JSONObject getProfile(@RequestBody JSONObject json)
+    public JSONObject getProperty(@RequestBody JSONObject json)
     {
     	String username=(String) json.get("username");
     	String sessionid=(String) json.get("sessionid");
-    	System.out.println("Preparing for get profile...");
-		return storage.getProfile(username, sessionid);
+    	System.out.println("Preparing for get property...");
+		return storage.getProperty(username, sessionid);
     }
     
-    @RequestMapping(value="/sendprofile", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/sendproperty", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
-    public JSONObject sendProfile(@RequestBody JSONObject json)
+    public JSONObject sendProperty(@RequestBody JSONObject json)
     {
     	String username=(String) json.get("username");
 		String sessionid=(String) json.get("sessionid");
 		String key=(String) json.get("key");
 		String value=(String) json.get("value");
-		System.out.println("Preparing for add profile...");
-		if(storage.addProfile(username, sessionid, key, value)){
+		System.out.println("Preparing for add property...");
+		if(storage.addProperty(username, sessionid, key, value)){
 			System.out.println(key+":"+value+ " added to: "+username);
 			return json;
 		}
         return null;
     }
     
-    @RequestMapping(value="/deleteprofile", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/deleteproperty", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
-    public JSONObject deleteProfile(@RequestBody JSONObject json)
+    public JSONObject deleteProperty(@RequestBody JSONObject json)
     {
     	String username=(String) json.get("username");
 		String sessionid=(String) json.get("sessionid");
 		String key=(String) json.get("key");
 		String value=(String) json.get("value");
-		System.out.println("Preparing for delete profile... "+key+":"+value);
-		if(storage.removeProfile(username, sessionid, key, value)){
+		System.out.println("Preparing for delete property... "+key+":"+value);
+		if(storage.removeProperty(username, sessionid, key, value)){
 			System.out.println(key+":"+value+ " removed from: "+username);
 			return json;
 		}
         return null;
     }
     
-    @RequestMapping(value="/editprofile", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/editproperty", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
-    public JSONObject editProfile(@RequestBody JSONObject json)
+    public JSONObject editProperty(@RequestBody JSONObject json)
     {
     	String username=(String) json.get("username");
 		String sessionid=(String) json.get("sessionid");
@@ -239,8 +239,8 @@ public class Manager {
 		String oldvalue=(String) json.get("oldvalue");
 		String newkey=(String) json.get("newkey");
 		String newvalue=(String) json.get("newvalue");
-		System.out.println("Preparing for edit profile..."+oldkey+":"+oldvalue+"\nto new: "+newkey+":"+newvalue);
-		if(storage.editProfile(username, sessionid, oldkey, oldvalue, newkey, newvalue)){
+		System.out.println("Preparing for edit property..."+oldkey+":"+oldvalue+"\nto new: "+newkey+":"+newvalue);
+		if(storage.editProperty(username, sessionid, oldkey, oldvalue, newkey, newvalue)){
 			System.out.println(oldkey+":"+oldvalue+ " edited from: "+username+" to :"+newkey+":"+newvalue);
 			return json;
 		}

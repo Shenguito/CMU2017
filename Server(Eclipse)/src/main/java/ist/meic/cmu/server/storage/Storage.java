@@ -17,10 +17,13 @@ public class Storage {
 	private ArrayList<GPSLocation> location;
 	private ArrayList<User> user;
 	private ArrayList<Post> post;
+	private ArrayList<Property> property;
 	public Storage(){
 		location=new ArrayList<GPSLocation>();
 		user=new ArrayList<User>();
 		post=new ArrayList<Post>();
+		property=new ArrayList<Property>();
+		
 		user.add(new User("a", "a"));
 	}
 	public boolean createUser(String username, String password){
@@ -115,7 +118,7 @@ public class Storage {
 		
 		return true;
 	}
-	public boolean sendPost(String title, String message, String username, String startDate, String endDate, String location, String filter, String mode, String profile) {
+	public boolean sendPost(String title, String message, String username, String startDate, String endDate, String location, String filter, String mode, String property) {
 		if(post.size()!=0)
 			for(Post p:post){
 				if(p.getTitle().equals(title)
@@ -136,21 +139,21 @@ public class Storage {
 			return false;
 		}
 		
-		ArrayList<Profile> prof=new ArrayList<>();
-		String[] profileParser=StringParser.getProfile(profile);
-		for(int i=0;i<profileParser.length;i+=2){
-			prof.add(new Profile(profileParser[i], profileParser[i+1]));
+		ArrayList<Property> prof=new ArrayList<>();
+		String[] propertyParser=StringParser.getProperty(property);
+		for(int i=0;i<propertyParser.length;i+=2){
+			prof.add(new Property(propertyParser[i], propertyParser[i+1]));
 		}
 		post.add(new Post(title, message, username, start, end, location, filter, mode, prof));
 		return true;
 	}
 	public JSONObject getPost(String username, String latitude, String longitude) {
 		JSONObject json=new JSONObject();
-		ArrayList<Profile> profile=new ArrayList<Profile>();
+		ArrayList<Property> property=new ArrayList<Property>();
 		if(user.size()!=0&&post.size()!=0&&location.size()!=0){
 			for (int i=0;i<user.size();i++) {
 				if(user.get(i).getUsername().equals(username)){
-					profile=user.get(i).getProfile();
+					property=user.get(i).getProperty();
 					break;
 				}
 			}
@@ -161,8 +164,8 @@ public class Storage {
 						JSONArray arrayPost=new JSONArray();
 						if(post.get(j).getLocation().equals(location.get(i).getName())||post.get(j).getUsername().equals(username)){
 							if(post.get(j).getFilter().equals("Whitelist")){
-								for(Profile p:post.get(j).getProfile()){
-									if(profile.contains(p)){
+								for(Property p:post.get(j).getProperty()){
+									if(property.contains(p)){
 										arrayPost.add(post.get(j).getTitle());
 										arrayPost.add(post.get(j).getMessage());
 										arrayPost.add(post.get(j).getUsername());
@@ -171,7 +174,7 @@ public class Storage {
 										arrayPost.add(post.get(j).getLocation());
 										arrayPost.add(post.get(j).getFilter());
 										arrayPost.add(post.get(j).getMode());
-										arrayPost.add(post.get(j).getProfileString());
+										arrayPost.add(post.get(j).getPropertyString());
 										
 										json.put("post"+w, arrayPost);
 										w++;
@@ -180,8 +183,8 @@ public class Storage {
 									}
 								}
 							}else if(post.get(j).getFilter().equals("Blacklist")){
-								for(Profile p:post.get(j).getProfile()){
-									if(!profile.contains(p)){
+								for(Property p:post.get(j).getProperty()){
+									if(!property.contains(p)){
 										arrayPost.add(post.get(j).getTitle());
 										arrayPost.add(post.get(j).getMessage());
 										arrayPost.add(post.get(j).getUsername());
@@ -190,7 +193,7 @@ public class Storage {
 										arrayPost.add(post.get(j).getLocation());
 										arrayPost.add(post.get(j).getFilter());
 										arrayPost.add(post.get(j).getMode());
-										arrayPost.add(post.get(j).getProfileString());
+										arrayPost.add(post.get(j).getPropertyString());
 										
 										json.put("post"+w, arrayPost);
 										w++;
@@ -222,43 +225,43 @@ public class Storage {
 		return false;
 	}
 	
-	public boolean addProfile(String username, String sessionid, String key, String value) {
+	public boolean addProperty(String username, String sessionid, String key, String value) {
 		if(user.size()!=0)
 			for (User tmpUser : user) {
 				if(tmpUser.getUsername().equals(username)&&tmpUser.getSessionID().equals(sessionid)){
-					for(Profile profile:tmpUser.getProfile()){
-						if(profile.getKey().equals(key)&&profile.getValue().equals(value))
+					for(Property property:tmpUser.getProperty()){
+						if(property.getKey().equals(key)&&property.getValue().equals(value))
 						return false;
 					}
 					System.out.println("add: "+key+" : "+value);
-					tmpUser.addProfile(new Profile(key, value));
+					tmpUser.addProperty(new Property(key, value));
 					return true;
 				}
 			}
 		return false;
 	}
-	public JSONObject getProfile(String username, String sessionid) {
+	public JSONObject getProperty(String username, String sessionid) {
 		JSONObject json=new JSONObject();
 		if(user.size()!=0)
 			for (User tmpUser : user) {
 				if(tmpUser.getUsername().equals(username)&&tmpUser.getSessionID().equals(sessionid)){
-					for(int i=0; i<tmpUser.getProfile().size();i++){
-						JSONArray jsonProfile=new JSONArray();
-						jsonProfile.add(tmpUser.getProfile().get(i).getKey());
-						jsonProfile.add(tmpUser.getProfile().get(i).getValue());
-						json.put("profile"+i, jsonProfile);
+					for(int i=0; i<tmpUser.getProperty().size();i++){
+						JSONArray jsonProperty=new JSONArray();
+						jsonProperty.add(tmpUser.getProperty().get(i).getKey());
+						jsonProperty.add(tmpUser.getProperty().get(i).getValue());
+						json.put("property"+i, jsonProperty);
 					}
 				}
 			}
 		return json;
 	}
-	public boolean removeProfile(String username, String sessionid, String key, String value) {
+	public boolean removeProperty(String username, String sessionid, String key, String value) {
 		if(user.size()!=0)
 			for (User tmpUser : user) {
 				if(tmpUser.getUsername().equals(username)&&tmpUser.getSessionID().equals(sessionid)){
-					for(Profile profile:tmpUser.getProfile()){
-						if(profile.getKey().equals(key)&&profile.getValue().equals(value)){
-							tmpUser.removeProfile(key, value);
+					for(Property property:tmpUser.getProperty()){
+						if(property.getKey().equals(key)&&property.getValue().equals(value)){
+							tmpUser.removeProperty(key, value);
 							System.out.println("remove: "+key+" : "+value);
 							return true;
 						}
@@ -267,16 +270,16 @@ public class Storage {
 			}
 		return false;
 	}
-	public boolean editProfile(String username, String sessionid, String oldkey, String oldvalue, String newkey,
+	public boolean editProperty(String username, String sessionid, String oldkey, String oldvalue, String newkey,
 			String newvalue) {
 		JSONObject json=new JSONObject();
 		if(user.size()!=0)
 			for (User tmpUser : user) {
 				if(tmpUser.getUsername().equals(username)&&tmpUser.getSessionID().equals(sessionid)){
-					for(int i=0; i<tmpUser.getProfile().size();i++){
-						if(tmpUser.getProfile().get(i).getKey().equals(oldkey)&&tmpUser.getProfile().get(i).getValue().equals(oldvalue)){
-							tmpUser.getProfile().get(i).setKey(newkey);
-							tmpUser.getProfile().get(i).setValue(newvalue);
+					for(int i=0; i<tmpUser.getProperty().size();i++){
+						if(tmpUser.getProperty().get(i).getKey().equals(oldkey)&&tmpUser.getProperty().get(i).getValue().equals(oldvalue)){
+							tmpUser.getProperty().get(i).setKey(newkey);
+							tmpUser.getProperty().get(i).setValue(newvalue);
 							return true;
 						}
 					}

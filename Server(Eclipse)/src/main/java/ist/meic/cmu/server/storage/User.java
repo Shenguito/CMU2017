@@ -6,7 +6,7 @@ public class User {
 	private String username;
 	private String password;
 	private String sessionID;
-	private ArrayList<Profile> profile=new ArrayList<Profile>();
+	private ArrayList<Property> profile=new ArrayList<Property>();
 
 	public User(String username, String password) {
 		this.username = username;
@@ -28,15 +28,15 @@ public class User {
 	public String getUsername() {
 		return username;
 	}
-	public ArrayList<Profile> getProfile() {
+	public ArrayList<Property> getProperty() {
 		return profile;
 	}
-	public void addProfile(Profile profile) {
+	public void addProperty(Property profile) {
 		this.profile.add(profile);
 	}
-	public void removeProfile(String key, String value) {
-		Profile realProfile=null;
-		for(Profile profile: this.profile){
+	public void removeProperty(String key, String value) {
+		Property realProfile=null;
+		for(Property profile: this.profile){
 			if(profile.getKey().equals(key)&&profile.getValue().equals(value)){
 				realProfile=profile;
 			}

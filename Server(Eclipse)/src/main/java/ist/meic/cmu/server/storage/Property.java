@@ -1,9 +1,9 @@
 package ist.meic.cmu.server.storage;
 
-public class Profile {
+public class Property {
 	private String key;
 	private String value;
-	public Profile(String key, String value){
+	public Property(String key, String value){
 		this.key=key;
 		this.value=value;
 	}
