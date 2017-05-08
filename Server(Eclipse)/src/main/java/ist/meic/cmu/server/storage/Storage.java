@@ -234,7 +234,10 @@ public class Storage {
 						return false;
 					}
 					System.out.println("add: "+key+" : "+value);
-					tmpUser.addProperty(new Property(key, value));
+					Property p=new Property(key, value);
+					tmpUser.addProperty(p);
+					if(!property.contains(p.getKey().equals(key)))
+						property.add(p);
 					return true;
 				}
 			}
@@ -252,6 +255,17 @@ public class Storage {
 						json.put("property"+i, jsonProperty);
 					}
 				}
+			}
+		return json;
+	}
+	public JSONObject getAllProperties() {
+		JSONObject json=new JSONObject();
+		if(property.size()!=0)
+			for(int i=0; i<property.size();i++){
+				JSONArray jsonProperty=new JSONArray();
+				jsonProperty.add(property.get(i).getKey());
+				jsonProperty.add(property.get(i).getValue());
+				json.put("property"+i, jsonProperty);
 			}
 		return json;
 	}
