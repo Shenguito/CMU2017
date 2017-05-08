@@ -101,18 +101,12 @@ public class Storage {
 		if(location.size()!=0)
 			for (int i=0;i<location.size();i++) {
 				JSONArray jsonLocation = new JSONArray();
-				System.out.println("Distance between: "+location.get(i).getLatitude()+" --- "+location.get(i).getLongitude());
-				System.out.println("and: "+Double.parseDouble(lat)+" --- "+Double.parseDouble(lon));
-				System.out.println("is: "+Algorithm.distFrom(location.get(i).getLatitude(), location.get(i).getLongitude(), Double.parseDouble(lat), Double.parseDouble(lon))+"m");
-				if(Algorithm.distFrom(location.get(i).getLatitude(), location.get(i).getLongitude(), Double.parseDouble(lat), Double.parseDouble(lon))<=
-								location.get(i).getRadius()){
-					
+				
 					jsonLocation.add(location.get(i).getName());
 					jsonLocation.add(location.get(i).getLatitude());
 					jsonLocation.add(location.get(i).getLongitude());
 					jsonLocation.add(location.get(i).getRadius());
 					json.put("location"+i, jsonLocation);
-				}
 			}
 			System.out.println("json output: "+json.toJSONString());
 		return json;
@@ -121,7 +115,7 @@ public class Storage {
 		
 		return true;
 	}
-	public boolean sendPost(String title, String message, String username, String startDate, String endDate, String location, String filder, String mode, String profile) {
+	public boolean sendPost(String title, String message, String username, String startDate, String endDate, String location, String filter, String mode, String profile) {
 		if(post.size()!=0)
 			for(Post p:post){
 				if(p.getTitle().equals(title)
@@ -147,7 +141,7 @@ public class Storage {
 		for(int i=0;i<profileParser.length;i+=2){
 			prof.add(new Profile(profileParser[i], profileParser[i+1]));
 		}
-		post.add(new Post(title, message, username, start, end, location, filder, mode, prof));
+		post.add(new Post(title, message, username, start, end, location, filter, mode, prof));
 		return true;
 	}
 	public JSONObject getPost(String username, String latitude, String longitude) {
@@ -165,23 +159,44 @@ public class Storage {
 								location.get(i).getRadius()){
 					for(int j=0 ; j<post.size();j++){
 						JSONArray arrayPost=new JSONArray();
-						if(post.get(j).getLocation().equals(location.get(i).getName())){
-							for(Profile p:post.get(j).getProfile()){
-								if(profile.contains(p)){
-									arrayPost.add(post.get(j).getTitle());
-									arrayPost.add(post.get(j).getMessage());
-									arrayPost.add(post.get(j).getUsername());
-									arrayPost.add(post.get(j).getStartDate());
-									arrayPost.add(post.get(j).getEndDate());
-									arrayPost.add(post.get(j).getLocation());
-									arrayPost.add(post.get(j).getFilder());
-									arrayPost.add(post.get(j).getMode());
-									arrayPost.add(post.get(j).getProfileString());
-									
-									json.put("post"+w, arrayPost);
-									w++;
-									//bug, may cause problem
-									break;
+						if(post.get(j).getLocation().equals(location.get(i).getName())||post.get(j).getUsername().equals(username)){
+							if(post.get(j).getFilter().equals("Whitelist")){
+								for(Profile p:post.get(j).getProfile()){
+									if(profile.contains(p)){
+										arrayPost.add(post.get(j).getTitle());
+										arrayPost.add(post.get(j).getMessage());
+										arrayPost.add(post.get(j).getUsername());
+										arrayPost.add(post.get(j).getStartDate());
+										arrayPost.add(post.get(j).getEndDate());
+										arrayPost.add(post.get(j).getLocation());
+										arrayPost.add(post.get(j).getFilter());
+										arrayPost.add(post.get(j).getMode());
+										arrayPost.add(post.get(j).getProfileString());
+										
+										json.put("post"+w, arrayPost);
+										w++;
+										//bug, may cause problem
+										break;
+									}
+								}
+							}else if(post.get(j).getFilter().equals("Blacklist")){
+								for(Profile p:post.get(j).getProfile()){
+									if(!profile.contains(p)){
+										arrayPost.add(post.get(j).getTitle());
+										arrayPost.add(post.get(j).getMessage());
+										arrayPost.add(post.get(j).getUsername());
+										arrayPost.add(post.get(j).getStartDate());
+										arrayPost.add(post.get(j).getEndDate());
+										arrayPost.add(post.get(j).getLocation());
+										arrayPost.add(post.get(j).getFilter());
+										arrayPost.add(post.get(j).getMode());
+										arrayPost.add(post.get(j).getProfileString());
+										
+										json.put("post"+w, arrayPost);
+										w++;
+										//bug, may cause problem
+										break;
+									}
 								}
 							}
 						}

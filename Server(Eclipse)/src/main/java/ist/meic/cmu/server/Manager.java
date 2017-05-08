@@ -142,7 +142,7 @@ public class Manager {
     	String startDate=(String) json.get("startDate");
     	String endDate=(String) json.get("endDate");
     	String location=(String) json.get("location");
-    	String filder=(String) json.get("filder");
+    	String filter=(String) json.get("filter");
     	String mode=(String) json.get("mode");
     	String profile=(String) json.get("profile");
     	System.out.println("Preparing for adding post...");
@@ -151,10 +151,10 @@ public class Manager {
     			"\n"+startDate+
     			"\n"+endDate+
     			"\n"+location+
-    			"\n"+filder+
+    			"\n"+filter+
     			"\n"+mode+
     			"\n"+profile);
-    	if(storage.sendPost(name, message, username, startDate, endDate, location, filder, mode, profile)){
+    	if(storage.sendPost(name, message, username, startDate, endDate, location, filter, mode, profile)){
     		return json;
     	}
 		return null;

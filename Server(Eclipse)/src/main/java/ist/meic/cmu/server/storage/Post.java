@@ -10,17 +10,17 @@ public class Post {
 	private Date endDate;
 	private String username;
 	private String location;
-	private String filder;
+	private String filter;
 	private String mode;
 	private ArrayList<Profile> profile=new ArrayList<Profile>();
-	public Post(String title, String message, String username, Date startDate, Date endDate, String location, String filder, String mode, ArrayList<Profile> profile) {
+	public Post(String title, String message, String username, Date startDate, Date endDate, String location, String filter, String mode, ArrayList<Profile> profile) {
 		this.title=title;
 		this.message=message;
 		this.username = username;
 		this.startDate=startDate;
 		this.endDate=endDate;
 		this.location=location;
-		this.filder=filder;
+		this.filter=filter;
 		this.mode=mode;
 		this.profile = profile;
 	}
@@ -60,11 +60,11 @@ public class Post {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public String getFilder() {
-		return filder;
+	public String getFilter() {
+		return filter;
 	}
-	public void setFilder(String filder) {
-		this.filder = filder;
+	public void setFilter(String filter) {
+		this.filter = filter;
 	}
 	public String getMode() {
 		return mode;
