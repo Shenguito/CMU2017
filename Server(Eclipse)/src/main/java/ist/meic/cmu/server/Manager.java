@@ -197,9 +197,9 @@ public class Manager {
 		return storage.getProperty(username, sessionid);
     }
     
-    @RequestMapping(value="/getallproperty", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/getallproperties", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
-    public JSONObject getAllProperty(@RequestBody JSONObject json)
+    public JSONObject getAllProperties(@RequestBody JSONObject json)
     {
 		return storage.getAllProperties();
     }
