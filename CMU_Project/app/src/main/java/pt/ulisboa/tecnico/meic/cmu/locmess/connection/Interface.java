@@ -5,7 +5,7 @@ package pt.ulisboa.tecnico.meic.cmu.locmess.connection;
  */
 
 public class Interface {
-    private static final String LOCALHOST="http://192.168.1.7:8080/";
+    private static final String LOCALHOST="http://192.168.1.66:8080/";
     public static String getLocalhost(){
         return LOCALHOST;
     }

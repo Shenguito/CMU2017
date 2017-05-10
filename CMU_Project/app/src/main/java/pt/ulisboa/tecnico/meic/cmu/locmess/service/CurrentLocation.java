@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.service;
 
 import android.Manifest;
 import android.app.Service;

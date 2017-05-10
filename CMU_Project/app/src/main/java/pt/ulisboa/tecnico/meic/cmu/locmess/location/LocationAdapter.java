@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.location;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+
+import pt.ulisboa.tecnico.meic.cmu.locmess.R;
 
 /**
  * Created by Akilino on 06/04/2017.

@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.tool;
 
 /**
  * Created by Akilino on 18/04/2017.
@@ -14,6 +14,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import pt.ulisboa.tecnico.meic.cmu.locmess.R;
 
 /**
  * Utility class for access to runtime permissions.

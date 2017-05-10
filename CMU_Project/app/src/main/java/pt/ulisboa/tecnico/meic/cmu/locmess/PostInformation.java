@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import pt.ulisboa.tecnico.meic.cmu.locmess.R;
-
 /**
  * Created by Akilino on 16/03/2017.
  */

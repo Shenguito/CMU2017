@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pt.ulisboa.tecnico.meic.cmu.locmess.LoginActivity"
+    tools:context="pt.ulisboa.tecnico.meic.cmu.locmess.login.LoginActivity"
     android:weightSum="1">
 
     <android.support.v7.widget.Toolbar

@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.inbox;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,17 +25,25 @@ import org.json.simple.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.meic.cmu.locmess.R;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Action;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Connection;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.MessageType;
-import pt.ulisboa.tecnico.meic.cmu.locmess.service.BackgroundLocation;
+import pt.ulisboa.tecnico.meic.cmu.locmess.location.LocationActivity;
+import pt.ulisboa.tecnico.meic.cmu.locmess.location.NewGPSLocation;
+import pt.ulisboa.tecnico.meic.cmu.locmess.login.LoginActivity;
+import pt.ulisboa.tecnico.meic.cmu.locmess.post.NewPost;
+import pt.ulisboa.tecnico.meic.cmu.locmess.post.NotesAdapter;
+import pt.ulisboa.tecnico.meic.cmu.locmess.post.Post;
+import pt.ulisboa.tecnico.meic.cmu.locmess.service.CurrentLocation;
 import pt.ulisboa.tecnico.meic.cmu.locmess.tool.StringParser;
+import pt.ulisboa.tecnico.meic.cmu.locmess.user.UserProfile;
 
 /**
  * Created by Akilino on 09/03/2017.
  */
 
-public class MainPageActivity extends AppCompatActivity implements NotesAdapter.ItemClickCallback{
+public class InboxActivity extends AppCompatActivity implements NotesAdapter.ItemClickCallback{
 
     private static final String MESSAGE = "MESSAGE";
     private static final String SENDER = "SENDER";
@@ -50,7 +58,6 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
     private NotesAdapter notesAdapter;
     private FloatingActionButton floatingActionButton,floatingActionButtonCompass,floatingActionButtonPost;
     private String username;
-    private BackgroundLocation locationService;
 
     RecyclerView recyclerView;
 
@@ -72,7 +79,6 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
         setSupportActionBar(toolbar);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        setupRecyclerView();
 
         floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         floatingActionButtonCompass = (FloatingActionButton) findViewById(R.id.floatingActionButtonCompass);
@@ -82,6 +88,13 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
         currentLocation = new CurrentLocation(this);
 
         //new BackgroundLocation(this);
+    }
+    @Override
+    public void onResume(){
+        //TODO, posts is not saved in this way!!!
+        super.onResume();
+        posts=new ArrayList<Post>();
+        setupRecyclerView();
     }
 
     private void setupRecyclerView(){
@@ -220,12 +233,12 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
             AlertDialog alert = builder.create();
             alert.show();
         }else if(id == R.id.action_profile){
-            Intent intent = new Intent(MainPageActivity.this, UserProfile.class);
+            Intent intent = new Intent(InboxActivity.this, UserProfile.class);
             intent.putExtra("username",username);
-            MainPageActivity.this.startActivity(intent);
+            InboxActivity.this.startActivity(intent);
         }else if(id == R.id.action_locations){
-            Intent intent = new Intent(MainPageActivity.this, LocationActivity.class);
-            MainPageActivity.this.startActivity(intent);
+            Intent intent = new Intent(InboxActivity.this, LocationActivity.class);
+            InboxActivity.this.startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -254,21 +267,21 @@ public class MainPageActivity extends AppCompatActivity implements NotesAdapter.
 
 
     public void createPost(){
-        Intent intent = new Intent(MainPageActivity.this, NewPost.class);
-        MainPageActivity.this.startActivity(intent);
+        Intent intent = new Intent(InboxActivity.this, NewPost.class);
+        InboxActivity.this.startActivity(intent);
     }
 
     public void addLocation(){
-        Intent intent = new Intent(MainPageActivity.this, NewGPSLocation.class);
-        MainPageActivity.this.startActivity(intent);
+        Intent intent = new Intent(InboxActivity.this, NewGPSLocation.class);
+        InboxActivity.this.startActivity(intent);
     }
 
     public void openDialog(final int position) {
-        LayoutInflater li = LayoutInflater.from(MainPageActivity.this);
+        LayoutInflater li = LayoutInflater.from(InboxActivity.this);
         final View promptsView = li.inflate(R.layout.dialog_warning_unpost_post, null);
 
         android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(
-                MainPageActivity.this);
+                InboxActivity.this);
 
         alertDialogBuilder.setView(promptsView);
 

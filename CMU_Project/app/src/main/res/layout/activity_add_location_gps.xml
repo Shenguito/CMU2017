@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.74"
-        tools:context="pt.ulisboa.tecnico.meic.cmu.locmess.NewGPSLocation" />
+        tools:context="pt.ulisboa.tecnico.meic.cmu.locmess.location.NewGPSLocation" />
 
     <EditText
         android:id="@+id/editText_locationName"

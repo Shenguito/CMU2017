@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.location;
 
 import android.Manifest;
 import android.content.Intent;
@@ -36,9 +36,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.simple.JSONObject;
 
+import pt.ulisboa.tecnico.meic.cmu.locmess.R;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Action;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Connection;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.MessageType;
+import pt.ulisboa.tecnico.meic.cmu.locmess.tool.PermissionUtils;
 
 import static pt.ulisboa.tecnico.meic.cmu.locmess.R.id.map;
 
@@ -64,6 +66,7 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
     private String temp = null;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean mPermissionDenied = false;
+    private boolean markerExists = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,7 +105,11 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
 
                 progressRadius = progress;
                 textViewRadiusSeekBar.setText("Radius: " + progress + "m");
-                radiusCircle.setRadius(progress);
+
+                if(markerExists){
+                    radiusCircle.setRadius(progress);
+                }
+
             }
 
             @Override
@@ -136,8 +143,16 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
                         .title(s.toString())
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
+                radiusCircle = mMap.addCircle(new CircleOptions()
+                        .center(latLng)
+                        .radius(progressRadius)
+                        .strokeColor(0x99BAFF00)
+                        .fillColor(0x30BAFF00)
+                        .strokeWidth(5f));
+
                 Marker locationMarker = mMap.addMarker(markerCreated);
                 locationMarker.showInfoWindow();
+                radiusCircle.setRadius(progressRadius);
 
             }
 
@@ -276,6 +291,8 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
         Toast.makeText(this, "Long Click", Toast.LENGTH_SHORT).show();
 
         mMap.clear();
+
+        markerExists = true;
 
         markerCreated = new MarkerOptions()
                 .position(latLng)

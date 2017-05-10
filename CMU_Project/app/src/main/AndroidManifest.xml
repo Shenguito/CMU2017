@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="pt.ulisboa.tecnico.meic.cmu.locmess">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -8,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        tools:replace="android:icon"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,30 +25,29 @@
             </intent-filter>
         </activity>
 
-        <activity android:label="@string/new_post" android:name=".NewPost"/>
+        <activity android:label="@string/new_post" android:name=".post.NewPost"/>
 
-        <activity android:label="User Profile" android:name=".UserProfile"/>
-        <activity android:label="New GPS Location" android:name=".NewGPSLocation"/>
-        <activity android:label="New WIFI Location" android:name=".NewWiFiLocation"/>
-        <activity android:label="Location" android:name=".LocationActivity"/>
+        <activity android:label="User Profile" android:name=".user.UserProfile"/>
+        <activity android:label="New GPS Location" android:name=".location.NewGPSLocation"/>
+        <activity android:label="New WIFI Location" android:name=".location.NewWiFiLocation"/>
+        <activity android:label="Location" android:name=".location.LocationActivity"/>
         <activity android:label="Detailed Post" android:name=".DetailedPost"/>
 
-        <activity android:name=".RegisterActivity"
-            android:parentActivityName=".LoginActivity" />
+        <activity android:name=".register.RegisterActivity"
+            android:parentActivityName=".login.LoginActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_android_map_api_key" />
 
-        <activity android:name=".MainPageActivity"
-            android:parentActivityName=".LoginActivity">
+        <activity android:name=".inbox.InboxActivity"
+            android:parentActivityName=".login.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginActivity"/>
+                android:value=".login.LoginActivity"/>
         </activity>
-		
-		<service android:enabled="false" android:name=".service.BackgroundLocation"/>
 
+        <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
 
     </application>
 

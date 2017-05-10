@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.login;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +17,10 @@ import org.json.simple.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
+import pt.ulisboa.tecnico.meic.cmu.locmess.inbox.InboxActivity;
+import pt.ulisboa.tecnico.meic.cmu.locmess.R;
+import pt.ulisboa.tecnico.meic.cmu.locmess.register.RegisterActivity;
+import pt.ulisboa.tecnico.meic.cmu.locmess.user.User;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Action;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Connection;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.MessageType;
@@ -43,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         boolean logged= sharedPref.getBoolean("logged", false);
         if(logged==true){
             String username=sharedPref.getString("username", null);
-            Intent intent = new Intent(this, MainPageActivity.class);
+            Intent intent = new Intent(this, InboxActivity.class);
             Toast.makeText(this, "You are now logged in!", Toast.LENGTH_SHORT).show();
             intent.putExtra("username", username);
             startActivity(intent);
@@ -53,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /*
     public void login(View view){
-        Intent intent = new Intent(this, MainPageActivity.class);
+        Intent intent = new Intent(this, InboxActivity.class);
         intent.putExtra("username", "Sheng");
         startActivity(intent);
     }
@@ -78,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "You are now logged in!", Toast.LENGTH_SHORT).show();
         username.getText().clear();
         password.getText().clear();
-        Intent intent = new Intent(this, MainPageActivity.class);
+        Intent intent = new Intent(this, InboxActivity.class);
         startActivity(intent);
         return true;
     }
@@ -98,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         json=new Connection().execute(action);
         if(json!=null) {
             if(!json.get("sessionid").equals("")) {
-                Intent intent = new Intent(this, MainPageActivity.class);
+                Intent intent = new Intent(this, InboxActivity.class);
                 Toast.makeText(this, "You are now logged in!", Toast.LENGTH_SHORT).show();
                 user = new User(json.get("username").toString(), json.get("password").toString().getBytes("UTF-8"));
                 //TODO service backgroud thread

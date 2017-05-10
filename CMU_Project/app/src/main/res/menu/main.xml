@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="pt.ulisboa.tecnico.meic.cmu.locmess.MainPageActivity">
+    tools:context="pt.ulisboa.tecnico.meic.cmu.locmess.inbox.InboxActivity">
 
     <item
         android:id="@+id/action_logout"

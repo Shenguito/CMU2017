@@ -1,4 +1,6 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.user;
+
+import pt.ulisboa.tecnico.meic.cmu.locmess.post.Post;
 
 /**
  * Created by Akilino on 16/03/2017.

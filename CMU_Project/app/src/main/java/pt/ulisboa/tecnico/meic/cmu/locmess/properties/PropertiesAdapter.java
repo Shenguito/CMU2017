@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.properties;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,9 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import pt.ulisboa.tecnico.meic.cmu.locmess.R;
 
 import static android.content.ContentValues.TAG;
 
@@ -17,7 +18,7 @@ import static android.content.ContentValues.TAG;
  * Created by Akilino on 06/04/2017.
  */
 
-public class PropertiesAdapterUser extends RecyclerView.Adapter<PropertiesAdapterUser.ViewHolder> {
+public class PropertiesAdapter extends RecyclerView.Adapter<PropertiesAdapter.ViewHolder> {
 
     private ItemClickCallback itemClickCallback;
     private ArrayList<Property> propertyList;
@@ -48,14 +49,14 @@ public class PropertiesAdapterUser extends RecyclerView.Adapter<PropertiesAdapte
         public void onClick(View v) {
             if(v.getId() == R.id.layoutProperty){
                 Log.d(TAG, "onClick: ItemClicked " + getAdapterPosition());
-                //getAdapterPosition();
                 itemClickCallback.onItemClick(getAdapterPosition());
             }
         }
-
     }
 
-    public PropertiesAdapterUser(Context context, ArrayList<Property> propertyList){
+
+
+    public PropertiesAdapter(Context context, ArrayList<Property> propertyList){
         this.context = context;
         this.propertyList = propertyList;
     }
@@ -64,22 +65,20 @@ public class PropertiesAdapterUser extends RecyclerView.Adapter<PropertiesAdapte
         return context;
     }
 
-
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PropertiesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
+        View propertyView = inflater.inflate(R.layout.property_item,parent,false);
 
-        View postView = inflater.inflate(R.layout.property_item,parent,false);
-
-        ViewHolder viewHolder = new ViewHolder(postView);
+        ViewHolder viewHolder = new ViewHolder(propertyView);
 
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(PropertiesAdapterUser.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(PropertiesAdapter.ViewHolder holder, int position) {
         Property property = propertyList.get(position);
 
         TextView propertyTextView = holder.propertiesTextView;
@@ -90,6 +89,4 @@ public class PropertiesAdapterUser extends RecyclerView.Adapter<PropertiesAdapte
     public int getItemCount() {
         return propertyList.size();
     }
-
-
 }

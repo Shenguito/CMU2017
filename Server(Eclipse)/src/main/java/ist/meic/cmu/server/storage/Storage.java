@@ -23,8 +23,20 @@ public class Storage {
 		user=new ArrayList<User>();
 		post=new ArrayList<Post>();
 		property=new ArrayList<Property>();
-		
-		user.add(new User("a", "a"));
+		User u=new User("a", "a");
+		u.addProperty(new Property("a", "a"));
+		user.add(u);
+		location.add(new GPSLocation("location", 65.96669666666666, -18.5333, 100));
+		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm");
+		try {
+			Date start = format.parse("01/01/01 01:01");
+			Date end=format.parse("11/11/11 11:11");
+			property.add(new Property("a", "a"));
+			property.add(new Property("b", "b"));
+			post.add(new Post("title", "default message", "a", start, end, "location", "Blacklist", "Centralized", property));
+		} catch (ParseException e) {
+			System.out.println("defaul value not added!!!");
+		}
 	}
 	public boolean createUser(String username, String password){
 		if(user.size()!=0)
@@ -138,14 +150,15 @@ public class Storage {
 			System.out.println("Date format error!!!");
 			return false;
 		}
-		
 		ArrayList<Property> prof=new ArrayList<>();
 		String[] propertyParser=StringParser.getProperty(property);
 		for(int i=0;i<propertyParser.length;i+=2){
 			prof.add(new Property(propertyParser[i], propertyParser[i+1]));
 		}
 		post.add(new Post(title, message, username, start, end, location, filter, mode, prof));
-		return true;
+		System.out.println("post added :"+post.get(post.size()-1).getTitle());
+		return true;		
+		
 	}
 	public JSONObject getPost(String username, String latitude, String longitude) {
 		JSONObject json=new JSONObject();
@@ -153,6 +166,7 @@ public class Storage {
 		if(user.size()!=0&&post.size()!=0&&location.size()!=0){
 			for (int i=0;i<user.size();i++) {
 				if(user.get(i).getUsername().equals(username)){
+					System.out.println("encontrou user");
 					property=user.get(i).getProperty();
 					break;
 				}
@@ -178,7 +192,7 @@ public class Storage {
 										
 										json.put("post"+w, arrayPost);
 										w++;
-										//bug, may cause problem
+										System.out.println("whitepost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
 										break;
 									}
 								}
@@ -197,7 +211,7 @@ public class Storage {
 										
 										json.put("post"+w, arrayPost);
 										w++;
-										//bug, may cause problem
+										System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
 										break;
 									}
 								}

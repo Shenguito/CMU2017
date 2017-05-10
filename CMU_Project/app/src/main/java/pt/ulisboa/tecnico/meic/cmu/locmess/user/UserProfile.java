@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.user;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -27,9 +27,13 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.meic.cmu.locmess.R;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Action;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.Connection;
 import pt.ulisboa.tecnico.meic.cmu.locmess.connection.MessageType;
+import pt.ulisboa.tecnico.meic.cmu.locmess.login.LoginActivity;
+import pt.ulisboa.tecnico.meic.cmu.locmess.properties.PropertiesAdapterUser;
+import pt.ulisboa.tecnico.meic.cmu.locmess.properties.Property;
 import pt.ulisboa.tecnico.meic.cmu.locmess.tool.StringParser;
 
 /**
@@ -88,11 +92,11 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
 
         json.put("username", username);
         json.put("sessionid", sessionid);
-        Action action =new Action(MessageType.getprofile, json);
+        Action action =new Action(MessageType.getproperty, json);
         json=new Connection().execute(action);
-        for(int i=0; json.get("profile"+i)!=null;i++) {
+        for(int i=0; json.get("property"+i)!=null;i++) {
 
-            String[] result= StringParser.getProfile(json.get("profile"+i).toString());
+            String[] result= StringParser.getProperty(json.get("property"+i).toString());
             Toast.makeText(this,result[0]+" : "+result[1]+" : "+i, Toast.LENGTH_SHORT).show();
 
             properties.add(0, new Property(result[0], result[1]));
@@ -213,7 +217,7 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
                                 json.put("sessionid", sessionid);
                                 json.put("key", property.getKey().trim());
                                 json.put("value", property.getValue().trim());
-                                Action action =new Action(MessageType.sendprofile, json);
+                                Action action =new Action(MessageType.sendproperty, json);
                                 json=new Connection().execute(action);
                                 if(json!=null){
                                     properties.add(0,property);
@@ -279,7 +283,7 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
                                 json.put("oldvalue", properties.get(position).getValue().trim());
                                 json.put("newkey", key.trim());
                                 json.put("newvalue", value.trim());
-                                Action action =new Action(MessageType.editprofile, json);
+                                Action action =new Action(MessageType.editproperty, json);
                                 json=new Connection().execute(action);
 
                                 if(json!=null) {
@@ -346,7 +350,7 @@ public class UserProfile extends AppCompatActivity implements PropertiesAdapterU
                                 json.put("sessionid", sessionid);
                                 json.put("key",properties.get(position).getKey().trim());
                                 json.put("value",properties.get(position).getValue().trim());
-                                Action action =new Action(MessageType.deleteprofile, json);
+                                Action action =new Action(MessageType.deleteproperty, json);
                                 json=new Connection().execute(action);
                                 if(json!=null) {
                                     properties.remove(position);

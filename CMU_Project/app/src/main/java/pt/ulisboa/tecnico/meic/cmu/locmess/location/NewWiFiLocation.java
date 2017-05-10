@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.location;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,10 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,9 +30,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import static pt.ulisboa.tecnico.meic.cmu.locmess.R.id.layoutProperty;
-import static pt.ulisboa.tecnico.meic.cmu.locmess.R.id.left;
-import static pt.ulisboa.tecnico.meic.cmu.locmess.R.id.top;
+import pt.ulisboa.tecnico.meic.cmu.locmess.R;
 
 /**
  * Created by Akilino on 07/04/2017.

@@ -1,6 +1,8 @@
-package pt.ulisboa.tecnico.meic.cmu.locmess;
+package pt.ulisboa.tecnico.meic.cmu.locmess.location;
 
-public class GPS extends Location{
+import pt.ulisboa.tecnico.meic.cmu.locmess.location.Location;
+
+public class GPS extends Location {
 
     public String lon, lat, radius;
 
