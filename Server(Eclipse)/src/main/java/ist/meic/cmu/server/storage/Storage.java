@@ -151,13 +151,19 @@ public class Storage {
 			return false;
 		}
 		ArrayList<Property> prof=new ArrayList<>();
-		String[] propertyParser=StringParser.getProperty(property);
-		for(int i=0;i<propertyParser.length;i+=2){
-			prof.add(new Property(propertyParser[i], propertyParser[i+1]));
+		if(property!=null){
+			String[] propertyParser=StringParser.getProperty(property);
+			for(int i=0;i<propertyParser.length;i+=2){
+				prof.add(new Property(propertyParser[i], propertyParser[i+1]));
+			}
+			post.add(new Post(title, message, username, start, end, location, filter, mode, prof));
+			System.out.println("post added :"+post.get(post.size()-1).getTitle());
+			return true;
+		}else{
+			post.add(new Post(title, message, username, start, end, location, filter, mode, prof));
+			System.out.println("post added :"+post.get(post.size()-1).getTitle());
+			return true;
 		}
-		post.add(new Post(title, message, username, start, end, location, filter, mode, prof));
-		System.out.println("post added :"+post.get(post.size()-1).getTitle());
-		return true;		
 		
 	}
 	public JSONObject getPost(String username, String latitude, String longitude) {
@@ -166,18 +172,19 @@ public class Storage {
 		if(user.size()!=0&&post.size()!=0&&location.size()!=0){
 			for (int i=0;i<user.size();i++) {
 				if(user.get(i).getUsername().equals(username)){
-					System.out.println("encontrou user");
 					property=user.get(i).getProperty();
+					System.out.println("User exists!");
 					break;
 				}
 			}
+			System.out.println("user has location: "+latitude+":"+longitude);
 			for(int i=0,w=0;i<location.size();i++){
 				if(Algorithm.distFrom(location.get(i).getLatitude(), location.get(i).getLongitude(), Double.parseDouble(latitude), Double.parseDouble(longitude))<=
 								location.get(i).getRadius()){
 					for(int j=0 ; j<post.size();j++){
 						JSONArray arrayPost=new JSONArray();
 						if(post.get(j).getLocation().equals(location.get(i).getName())||post.get(j).getUsername().equals(username)){
-							if(post.get(j).getFilter().equals("Whitelist")){
+							if(post.get(j).getFilter().equals("Whitelist")&&property.size()!=0){
 								for(Property p:post.get(j).getProperty()){
 									if(property.contains(p)){
 										arrayPost.add(post.get(j).getTitle());
@@ -197,23 +204,39 @@ public class Storage {
 									}
 								}
 							}else if(post.get(j).getFilter().equals("Blacklist")){
-								for(Property p:post.get(j).getProperty()){
-									if(!property.contains(p)){
-										arrayPost.add(post.get(j).getTitle());
-										arrayPost.add(post.get(j).getMessage());
-										arrayPost.add(post.get(j).getUsername());
-										arrayPost.add(post.get(j).getStartDate());
-										arrayPost.add(post.get(j).getEndDate());
-										arrayPost.add(post.get(j).getLocation());
-										arrayPost.add(post.get(j).getFilter());
-										arrayPost.add(post.get(j).getMode());
-										arrayPost.add(post.get(j).getPropertyString());
-										
-										json.put("post"+w, arrayPost);
-										w++;
-										System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
-										break;
+								if(property.size()!=0){
+									for(Property p:post.get(j).getProperty()){
+										if(!property.contains(p)){
+											arrayPost.add(post.get(j).getTitle());
+											arrayPost.add(post.get(j).getMessage());
+											arrayPost.add(post.get(j).getUsername());
+											arrayPost.add(post.get(j).getStartDate());
+											arrayPost.add(post.get(j).getEndDate());
+											arrayPost.add(post.get(j).getLocation());
+											arrayPost.add(post.get(j).getFilter());
+											arrayPost.add(post.get(j).getMode());
+											arrayPost.add(post.get(j).getPropertyString());
+											
+											json.put("post"+w, arrayPost);
+											w++;
+											System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
+											break;
+										}
 									}
+								}else{
+									arrayPost.add(post.get(j).getTitle());
+									arrayPost.add(post.get(j).getMessage());
+									arrayPost.add(post.get(j).getUsername());
+									arrayPost.add(post.get(j).getStartDate());
+									arrayPost.add(post.get(j).getEndDate());
+									arrayPost.add(post.get(j).getLocation());
+									arrayPost.add(post.get(j).getFilter());
+									arrayPost.add(post.get(j).getMode());
+									arrayPost.add(post.get(j).getPropertyString());
+									
+									json.put("post"+w, arrayPost);
+									w++;
+									System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
 								}
 							}
 						}

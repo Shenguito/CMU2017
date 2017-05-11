@@ -167,9 +167,11 @@ public class Manager {
     	String username=(String) json.get("username");
     	String latitude=(String) json.get("latitude");
     	String longitude=(String) json.get("longitude");
-
-    	System.out.println("Preparing for get post...");
-		return storage.getPost(username, latitude, longitude);
+    	if(username!=null&&latitude!=null&&longitude!=null){
+    		System.out.println("Preparing for get post...");
+    		return storage.getPost(username, latitude, longitude);
+    	}
+    	return null;
     }
     
     @RequestMapping(value="/deletepost", method={ RequestMethod.GET, RequestMethod.POST })
