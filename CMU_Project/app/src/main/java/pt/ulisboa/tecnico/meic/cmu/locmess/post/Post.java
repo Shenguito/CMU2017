@@ -1,12 +1,13 @@
 package pt.ulisboa.tecnico.meic.cmu.locmess.post;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 /**
  * Created by Akilino on 16/03/2017.
  */
 
-public class Post {
+public class Post implements Serializable{
 
     public String title;
     public String location;

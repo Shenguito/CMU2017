@@ -12,6 +12,23 @@ public class GPS extends Location {
         this.lat = lat;
         this.radius = radius;
     }
+
+    public void setLon(String lon) {
+        this.lon = lon;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getRadius() {
+        return radius;
+    }
+
+    public void setRadius(String radius) {
+        this.radius = radius;
+    }
+
     public String getLat(){
         return lat;
     }

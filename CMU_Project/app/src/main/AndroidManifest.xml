@@ -6,7 +6,9 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         tools:replace="android:icon"
@@ -31,7 +33,8 @@
         <activity android:label="New GPS Location" android:name=".location.NewGPSLocation"/>
         <activity android:label="New WIFI Location" android:name=".location.NewWiFiLocation"/>
         <activity android:label="Location" android:name=".location.LocationActivity"/>
-        <activity android:label="Detailed Post" android:name=".DetailedPost"/>
+        <activity android:label="Detailed Post" android:name=".post.DetailedPost"/>
+        <activity android:label="Detailed Location" android:name=".location.DetailedLocation"/>
 
         <activity android:name=".register.RegisterActivity"
             android:parentActivityName=".login.LoginActivity" />
@@ -41,12 +44,15 @@
             android:value="@string/google_android_map_api_key" />
 
         <activity android:name=".inbox.InboxActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".login.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".login.LoginActivity"/>
         </activity>
-
+        <service android:name=".service.BackgroundService" />
+        <receiver android:name="NewWiFiLocation"></receiver>
+        <receiver android:name="InboxActivity"></receiver>
         <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
 
     </application>

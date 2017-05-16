@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.meic.cmu.locmess.location;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -17,6 +19,9 @@ import android.widget.Toast;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.meic.cmu.locmess.R;
@@ -35,6 +40,11 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
     private ArrayList<Location> locations;
     private LocationAdapter adapter;
     public ArrayList<Location> list;
+    private static final String LOCATION = "LOCATION";
+    private static final String LATITUDE = "LATITUDE";
+    private static final String LONGITUDE = "LONGITUDE";
+    private static final String RADIUS = "RADIUS";
+    private static final String BUNDLE_EXTRAS = "BUNDLE_EXTRAS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +60,6 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
 
         SharedPreferences sharedPref = this.getSharedPreferences("file", Context.MODE_PRIVATE);
         locations = populateView();
-
-
 
         adapter = new LocationAdapter(this, locations);
         recyclerView.setAdapter(adapter);
@@ -77,7 +85,7 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
                     j++;
                 }
                 String[] result=StringParser.getLocation(json.get("location"+j).toString());
-                Toast.makeText(this,result[0]+" : "+result[3], Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,result[0]+" : "+result[3], Toast.LENGTH_SHORT).show();
 
                 GPS location = new GPS(result[0], result[1], result[2], result[3]);
                 list.add(location);
@@ -95,6 +103,21 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
     @Override
     public void onItemClick(int p) {
         Toast.makeText(this, "Clicked on primary position " + p, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, DetailedLocation.class);
+
+        if(list.get(p) instanceof GPS){
+            GPS gpsLocation = (GPS) list.get(p);
+
+            Bundle extras = new Bundle();
+            extras.putString(LOCATION,gpsLocation.getName());
+            extras.putString(LATITUDE, gpsLocation.getLat());
+            extras.putString(LONGITUDE,gpsLocation.getLon());
+            extras.putString(RADIUS,gpsLocation.getRadius());
+            intent.putExtra(BUNDLE_EXTRAS,extras);
+
+        }
+        startActivity(intent);
     }
 
     @Override
@@ -107,7 +130,7 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
         //TODO
 
         locations.remove(position);
-        adapter.notifyItemRemoved(position);
+        adapter.notifyDataSetChanged();
     }
 
     public void openDialog(final int position) {

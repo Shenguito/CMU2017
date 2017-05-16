@@ -49,6 +49,7 @@
     <string name="from">From</string>
     <string name="warning_location">Are you sure you want to delete this location?</string>
     <string name="warning_unpost_post">Are you sure you want to unpost this post?</string>
+    <string name="warning_delete_post">Are you sure you want to delete this post?</string>
     <string name="decentralized">Decentralized</string>
     <string name="centralized">Centralized</string>
     <string name="mode">Mode</string>
@@ -57,7 +58,11 @@
     <string name="viewLocation">View</string>
     <string name="location_permission_denied">Location Permission Denied</string>
     <string name="permission_required_toast">Permission is required</string>
-    <string name="permission_rationale_location">Permition rationale Location</string>
+    <string name="permission_rationale_location">Permission rationale Location</string>
+    <string name="lng">Longitude: </string>
+    <string name="lat">Latitude: </string>
+    <string name="radius">Radius: </string>
+    <string name="ssid">SSID: </string>
 
     <string-array name="keys">
         <item>Team</item>

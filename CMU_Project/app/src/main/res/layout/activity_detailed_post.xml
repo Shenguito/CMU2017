@@ -18,7 +18,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="292dp"
-        tools:context="pt.ulisboa.tecnico.meic.cmu.locmess.DetailedPost" />
+        tools:context="pt.ulisboa.tecnico.meic.cmu.locmess.post.DetailedPost" />
 
 
     <TextView
@@ -34,8 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_weight="0.25"
-        android:inputType="textImeMultiLine"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
         android:textSize="18sp" />
 
     <TextView

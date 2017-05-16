@@ -4,11 +4,11 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewUnpostPost"
+        android:id="@+id/textViewDeletePost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="17dp"
         android:inputType="textMultiLine"
-        android:text="@string/warning_unpost_post"
+        android:text="@string/warning_delete_post"
         android:textSize="18sp" />
 </LinearLayout>

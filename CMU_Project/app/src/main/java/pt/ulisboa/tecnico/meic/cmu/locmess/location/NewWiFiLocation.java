@@ -36,7 +36,13 @@ import pt.ulisboa.tecnico.meic.cmu.locmess.R;
  * Created by Akilino on 07/04/2017.
  */
 
-public class NewWiFiLocation extends AppCompatActivity {
+// problema: quando se sai do mainpage, o BackGroundService dá erro de não conseguir dar bound e faz unbound
+//           neste caso o NewWifiDirect também não consegue dar bound ao BackGroundService
+
+// solução: vou tentar criar dois services, um para cada BroadCastReceiver
+
+public class NewWiFiLocation extends AppCompatActivity{
+
 
     private Toolbar toolbar;
     private ArrayList<String> customNetworks;
@@ -48,7 +54,15 @@ public class NewWiFiLocation extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_location_wifi);
 
@@ -86,7 +100,20 @@ public class NewWiFiLocation extends AppCompatActivity {
             }
         });
 
-        addAvailableNetworks(5);
+    }
+
+    @Override
+    public void onResume(){
+        //TODO
+        //addAvailableNetworks();
+        super.onResume();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
     }
 
     private void createGPSActivity(){
@@ -143,7 +170,7 @@ public class NewWiFiLocation extends AppCompatActivity {
         horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
         horizontalLayout.setTag("horizontalLayout");
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+        LayoutParams layoutParams = new LayoutParams(
                 LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         layoutParams.setMargins(10,20,10,20);
@@ -175,18 +202,14 @@ public class NewWiFiLocation extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void addAvailableNetworks(int numberAvailable){
-
-        for(int i = 0; i < numberAvailable; i++){
-            params.setMargins(10,15,10,15);
-            Switch switchTag = new Switch(this);
-            switchTag.setText("Available WiFi " + i);
-            switchTag.setTag("wifi"+i);
-            switchTag.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-            switchTag.setLayoutParams(params);
-            verticalLayout.addView(switchTag);
-        }
-
+    public void addAvailableNetworks(String nome, String ip){
+        params.setMargins(10, 15, 10, 15);
+        Switch switchTag = new Switch(this);
+        switchTag.setText("Wifi name: " + nome);
+        switchTag.setTag("wifi ip: " + ip);
+        switchTag.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        switchTag.setLayoutParams(params);
+        verticalLayout.addView(switchTag);
     }
 
     View.OnClickListener click = new View.OnClickListener() {

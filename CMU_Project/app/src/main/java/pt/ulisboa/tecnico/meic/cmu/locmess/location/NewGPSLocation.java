@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -43,6 +44,7 @@ import pt.ulisboa.tecnico.meic.cmu.locmess.connection.MessageType;
 import pt.ulisboa.tecnico.meic.cmu.locmess.tool.PermissionUtils;
 
 import static pt.ulisboa.tecnico.meic.cmu.locmess.R.id.map;
+import static pt.ulisboa.tecnico.meic.cmu.locmess.R.id.textViewRadius;
 
 /**
  * Created by Akilino on 02/04/2017.
@@ -96,7 +98,7 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
 
         textViewRadiusSeekBar = (TextView) findViewById(R.id.textViewRadiusSeekBar);
         seekBarRadius = (SeekBar) findViewById(R.id.seekBarRadius);
-        textViewRadiusSeekBar.setText("Radius: " + "0m");
+        textViewRadiusSeekBar.setText("Radius: 0m");
 
         seekBarRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -136,27 +138,30 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
         editTextLocationName.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                LatLng latLng = markerCreated.getPosition();
-                mMap.clear();
-                markerCreated = new MarkerOptions()
-                        .position(latLng)
-                        .title(s.toString())
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                if(markerCreated != null && radiusCircle != null) {
+                    LatLng latLng = markerCreated.getPosition();
+                    mMap.clear();
+                    markerCreated = new MarkerOptions()
+                            .position(latLng)
+                            .title(s.toString())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
-                radiusCircle = mMap.addCircle(new CircleOptions()
-                        .center(latLng)
-                        .radius(progressRadius)
-                        .strokeColor(0x99BAFF00)
-                        .fillColor(0x30BAFF00)
-                        .strokeWidth(5f));
+                    radiusCircle = mMap.addCircle(new CircleOptions()
+                            .center(latLng)
+                            .radius(progressRadius)
+                            .strokeColor(0x99BAFF00)
+                            .fillColor(0x30BAFF00)
+                            .strokeWidth(5f));
 
-                Marker locationMarker = mMap.addMarker(markerCreated);
-                locationMarker.showInfoWindow();
-                radiusCircle.setRadius(progressRadius);
+                    Marker locationMarker = mMap.addMarker(markerCreated);
+                    locationMarker.showInfoWindow();
+                    radiusCircle.setRadius(progressRadius);
+                }
 
             }
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}{
+            }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -176,10 +181,8 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
         int id = item.getItemId();
 
         if (id == R.id.action_create) {
-            if(editTextLocationName.getText().toString()!=null &&
-                    textViewLat.getText().toString()!=null &&
-                    textViewLon.getText().toString()!=null &&
-                    textViewRadiusSeekBar.getText().toString()!=null) {
+            if(isLocationComplete()) {
+                Log.d("NewGPSLocation", "onOptionsItemSelected: It's inside");
                 JSONObject json = new JSONObject();
                 json.put("name", editTextLocationName.getText().toString());
                 json.put("latitude", textViewLat.getText().toString().split(" ")[1]);
@@ -188,19 +191,28 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
                 json.put("radius", radius.substring(radius.indexOf(" ") + 1, radius.indexOf("m")));
                 Action action = new Action(MessageType.createlocation, json);
                 json = new Connection().execute(action);
+
                 if(json!=null){
                     Toast.makeText(this, "Location successfuly created!", Toast.LENGTH_SHORT).show();
+                    finish();
                 }else {
                     Toast.makeText(this, "Location can't be created!", Toast.LENGTH_SHORT).show();
                 }
 
-                finish();
             }else{
                 Toast.makeText(this, "Complete all fields!", Toast.LENGTH_SHORT).show();
             }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isLocationComplete(){
+        if(editTextLocationName.getText().toString().matches("") || textViewLat.getText().toString().matches("Latitude: ") || textViewLon.getText().toString().matches("Longitude: ") || textViewRadiusSeekBar.getText().toString().matches("Radius: 0m")){
+            return false;
+        }
+
+        return true;
     }
 
     private void createWifiActivity() {
@@ -293,6 +305,9 @@ public class NewGPSLocation extends AppCompatActivity implements OnMapReadyCallb
         mMap.clear();
 
         markerExists = true;
+
+        if(!editTextLocationName.getText().toString().matches(""))
+            marker = editTextLocationName.getText().toString();
 
         markerCreated = new MarkerOptions()
                 .position(latLng)

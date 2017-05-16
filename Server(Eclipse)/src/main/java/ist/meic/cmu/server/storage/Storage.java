@@ -26,7 +26,14 @@ public class Storage {
 		User u=new User("a", "a");
 		u.addProperty(new Property("a", "a"));
 		user.add(u);
-		location.add(new GPSLocation("location", 65.96669666666666, -18.5333, 100));
+		location.add(new GPSLocation("Jardim do Arco do Cego",38.7350296,-9.141876,50));
+		location.add(new GPSLocation("Aeroporto de Lisboa",38.7755936,-9.1353667,50));
+		location.add(new GPSLocation("Centro Colombo",38.754588,-9.1907547,50));
+		location.add(new GPSLocation("Instituto Superior Técnico",38.73794298993974,-9.137803986668587,50));
+		location.add(new GPSLocation("Casa da Música",41.1568533,-8.6309936,50));
+		location.add(new GPSLocation("Big Ben",51.5007292,-0.1268141,50));
+		location.add(new GPSLocation("Fitness Hut Arco Cego",38.7347492,-9.1418714,50));
+		
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm");
 		try {
 			Date start = format.parse("01/01/01 01:01");

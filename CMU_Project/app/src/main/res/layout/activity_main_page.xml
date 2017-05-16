@@ -34,6 +34,13 @@
             android:layout_margin="10dp"
             android:fadeScrollbars="true" />
 
+        <Button
+            android:id="@+id/termite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Termite"
+            android:onClick="termite"/>
+
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton

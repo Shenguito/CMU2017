@@ -252,19 +252,22 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
                     j++;
                 }
                 String[] result=StringParser.getLocation(json.get("location"+j).toString());
-                Toast.makeText(this,"populate: "+result[0]+" : "+result[3], Toast.LENGTH_SHORT).show();
 
                 GPS location = new GPS(result[0], result[1], result[2], result[3]);
                 locationList.add(location);
             }
 
-
         }
+
+
+        //TODO descentralized
 
         for (int i = 0; i < 2; i++) {
             Wifi location = new Wifi("Location Wifi " + i, "Mac Address" + i);
             locationList.add(location);
         }
+
+
         for(int i = 0; i < locationList.size(); i++){
             spinnerArray.add(locationList.get(i).locationName);
         }
@@ -374,6 +377,15 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isPostComplete(){
+        if(titleEditText.getText().toString().matches("")){
+            Toast.makeText(this, "Enter title", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -581,7 +593,7 @@ public class NewPost extends AppCompatActivity implements PropertiesAdapter.Item
 
     @Override
     public void onItemClick(int p) {
-        Log.d("newPost", "onItemClick: it clicked");
+        Log.d("newPost", "onStatusButtonOwnerClicked: it clicked");
         openDialogViewProperty(p);
     }
 }

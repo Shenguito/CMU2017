@@ -19,6 +19,7 @@
 
 
         <LinearLayout
+            android:id="@+id/linearLayoutLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -27,7 +28,6 @@
 
             <TextView
                 android:id="@+id/textViewLocationName"
-                android:textColor="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -39,12 +39,24 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingStart="5dp"
-                android:text="TextView"
+                android:text="TextViewName"
+                android:textColor="@android:color/white"
                 android:textSize="16dp" />
 
             <TextView
-                android:id="@+id/textViewLocationExtraInfo"
-                android:textColor="@android:color/white"
+                android:id="@+id/textViewLat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.68"
+                android:text="TextViewLat"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/textViewLong"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -54,10 +66,36 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginStart="5dp"
-                android:text="TextView"
+                android:text="TextViewLong"
+                android:textColor="@android:color/white"
                 android:textSize="13dp" />
 
+            <TextView
+                android:id="@+id/textViewRadius"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.68"
+                android:text="TextViewRadius"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/textViewSSID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.68"
+                android:text="TextViewWifi"
+                android:textColor="@android:color/white" />
+
             <LinearLayout
+                android:id="@+id/linearLayoutLocationButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="37dp"
                 android:layout_gravity="end"
@@ -65,7 +103,7 @@
 
                 <Button
                     android:id="@+id/viewButtonLocation"
-                    android:layout_width="46dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:background="@android:color/transparent"
