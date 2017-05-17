@@ -2,12 +2,24 @@ package ist.meic.cmu.server.storage;
 
 public class GPSLocation extends Location{
 	private int radius;
+	private double longitude;
+	private double latitude;
 	public GPSLocation(String name, double lontitude, double latitude, int radius){
-		super(name, lontitude, latitude);
+		super(name);
 		this.radius=radius;
+		this.latitude=latitude;
+		this.longitude=longitude;
 	}
 
 	public int getRadius() {
 		return radius;
+	}
+	
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public double getLatitude() {
+		return latitude;
 	}
 }

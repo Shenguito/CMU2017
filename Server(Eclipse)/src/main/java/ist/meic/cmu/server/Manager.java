@@ -105,6 +105,37 @@ public class Manager {
     	}
 		return null;
     }
+    @RequestMapping(value="/addWifiLocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject addWifiLocation(@RequestBody JSONObject json)
+    {
+    	String name=(String) json.get("name");
+    	String ssid=(String) json.get("ssid");
+		System.out.println("name: "+name+
+				" ssid: "+ssid);
+    	System.out.println("Preparing for adding wifi location...");
+
+    	if(storage.addWifiLocation(name, ssid)){
+    		return json;
+    	}
+		return null;
+    }
+    
+    @RequestMapping(value="/removeWifiLocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject removeWifiLocation(@RequestBody JSONObject json)
+    {
+    	String name=(String) json.get("name");
+    	String ssid=(String) json.get("ssid");
+		System.out.println("name: "+name+
+				"ssid: "+ssid);
+    	System.out.println("Preparing for removing wifi location...");
+
+    	if(storage.removeWifiLocation(name, ssid)){
+    		return json;
+    	}
+		return null;
+    }
     
     @RequestMapping(value="/removelocation", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
@@ -126,10 +157,17 @@ public class Manager {
     @ResponseBody
     public JSONObject getLocation(@RequestBody JSONObject json)
     {
-    	String lat=(String) json.get("latitude");
-    	String lon=(String) json.get("longitude");
     	System.out.println("Preparing for get location...");
-		return storage.getLocation(lat, lon);
+		return storage.getLocation();
+    }
+    
+    @RequestMapping(value="/checkWifilocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject getWifiLocation(@RequestBody JSONObject json)
+    {
+    	
+    	System.out.println("Preparing for get location...");
+		return storage.getWifiLocation();
     }
     
     @RequestMapping(value="/sendpost", method={ RequestMethod.GET, RequestMethod.POST })

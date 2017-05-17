@@ -14,25 +14,27 @@ import ist.meic.cmu.server.tool.StringParser;
 
 public class Storage {
 
-	private ArrayList<GPSLocation> location;
+	private ArrayList<GPSLocation> GPSLocation;
+	private ArrayList<WifiLocation> wifiLocation;
 	private ArrayList<User> user;
 	private ArrayList<Post> post;
 	private ArrayList<Property> property;
 	public Storage(){
-		location=new ArrayList<GPSLocation>();
+		GPSLocation=new ArrayList<GPSLocation>();
+		wifiLocation=new ArrayList<WifiLocation>();
 		user=new ArrayList<User>();
 		post=new ArrayList<Post>();
 		property=new ArrayList<Property>();
 		User u=new User("a", "a");
 		u.addProperty(new Property("a", "a"));
 		user.add(u);
-		location.add(new GPSLocation("Jardim do Arco do Cego",38.7350296,-9.141876,50));
-		location.add(new GPSLocation("Aeroporto de Lisboa",38.7755936,-9.1353667,50));
-		location.add(new GPSLocation("Centro Colombo",38.754588,-9.1907547,50));
-		location.add(new GPSLocation("Instituto Superior Técnico",38.73794298993974,-9.137803986668587,50));
-		location.add(new GPSLocation("Casa da Música",41.1568533,-8.6309936,50));
-		location.add(new GPSLocation("Big Ben",51.5007292,-0.1268141,50));
-		location.add(new GPSLocation("Fitness Hut Arco Cego",38.7347492,-9.1418714,50));
+		GPSLocation.add(new GPSLocation("Jardim do Arco do Cego",38.7350296,-9.141876,50));
+		GPSLocation.add(new GPSLocation("Aeroporto de Lisboa",38.7755936,-9.1353667,50));
+		GPSLocation.add(new GPSLocation("Centro Colombo",38.754588,-9.1907547,50));
+		GPSLocation.add(new GPSLocation("Instituto Superior Técnico",38.73794298993974,-9.137803986668587,50));
+		GPSLocation.add(new GPSLocation("Casa da Música",41.1568533,-8.6309936,50));
+		GPSLocation.add(new GPSLocation("Big Ben",51.5007292,-0.1268141,50));
+		GPSLocation.add(new GPSLocation("Fitness Hut Arco Cego",38.7347492,-9.1418714,50));
 		
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm");
 		try {
@@ -91,8 +93,8 @@ public class Storage {
 	}
 	public boolean addLocation(String name, String lat, String lon, String radius){
 
-		if(location.size()!=0)
-			for (GPSLocation tmplocation : location) {
+		if(GPSLocation.size()!=0)
+			for (GPSLocation tmplocation : GPSLocation) {
 				if(tmplocation.getName().equals(name)||
 						(tmplocation.getLatitude()==Double.parseDouble(lat)&&
 						tmplocation.getLongitude()==Double.parseDouble(lon))){
@@ -103,31 +105,31 @@ public class Storage {
 			"latitude: "+Double.parseDouble(lat)+
 				"longitude: "+Double.parseDouble(lon)+
 			"radius: "+Integer.parseInt(radius));
-		location.add(new GPSLocation(name, Double.parseDouble(lat), Double.parseDouble(lon), Integer.parseInt(radius)));
+		GPSLocation.add(new GPSLocation(name, Double.parseDouble(lat), Double.parseDouble(lon), Integer.parseInt(radius)));
 		return true;
 	}
 	public boolean removeLocation(String name, String lat, String lon) {
-		if(location.size()!=0)
-			for (int i=0;i<location.size();i++) {
-				if(location.get(i).getName().equals(name)&&
-						location.get(i).getLatitude()==Double.parseDouble(lat)&&
-								location.get(i).getLongitude()==Double.parseDouble(lon)){
-					location.remove(i);
+		if(GPSLocation.size()!=0)
+			for (int i=0;i<GPSLocation.size();i++) {
+				if(GPSLocation.get(i).getName().equals(name)&&
+						GPSLocation.get(i).getLatitude()==Double.parseDouble(lat)&&
+								GPSLocation.get(i).getLongitude()==Double.parseDouble(lon)){
+					GPSLocation.remove(i);
 					return true;
 				}
 			}
 		return false;
 	}
-	public JSONObject getLocation(String lat, String lon) {
+	public JSONObject getLocation() {
 		JSONObject json=new JSONObject();
-		if(location.size()!=0)
-			for (int i=0;i<location.size();i++) {
+		if(GPSLocation.size()!=0)
+			for (int i=0;i<GPSLocation.size();i++) {
 				JSONArray jsonLocation = new JSONArray();
 				
-					jsonLocation.add(location.get(i).getName());
-					jsonLocation.add(location.get(i).getLatitude());
-					jsonLocation.add(location.get(i).getLongitude());
-					jsonLocation.add(location.get(i).getRadius());
+					jsonLocation.add(GPSLocation.get(i).getName());
+					jsonLocation.add(GPSLocation.get(i).getLatitude());
+					jsonLocation.add(GPSLocation.get(i).getLongitude());
+					jsonLocation.add(GPSLocation.get(i).getRadius());
 					json.put("location"+i, jsonLocation);
 			}
 			System.out.println("json output: "+json.toJSONString());
@@ -176,7 +178,7 @@ public class Storage {
 	public JSONObject getPost(String username, String latitude, String longitude) {
 		JSONObject json=new JSONObject();
 		ArrayList<Property> property=new ArrayList<Property>();
-		if(user.size()!=0&&post.size()!=0&&location.size()!=0){
+		if(user.size()!=0&&post.size()!=0&&GPSLocation.size()!=0){
 			for (int i=0;i<user.size();i++) {
 				if(user.get(i).getUsername().equals(username)){
 					property=user.get(i).getProperty();
@@ -185,12 +187,12 @@ public class Storage {
 				}
 			}
 			System.out.println("user has location: "+latitude+":"+longitude);
-			for(int i=0,w=0;i<location.size();i++){
-				if(Algorithm.distFrom(location.get(i).getLatitude(), location.get(i).getLongitude(), Double.parseDouble(latitude), Double.parseDouble(longitude))<=
-								location.get(i).getRadius()){
+			for(int i=0,w=0;i<GPSLocation.size();i++){
+				if(Algorithm.distFrom(GPSLocation.get(i).getLatitude(), GPSLocation.get(i).getLongitude(), Double.parseDouble(latitude), Double.parseDouble(longitude))<=
+								GPSLocation.get(i).getRadius()){
 					for(int j=0 ; j<post.size();j++){
 						JSONArray arrayPost=new JSONArray();
-						if(post.get(j).getLocation().equals(location.get(i).getName())||post.get(j).getUsername().equals(username)){
+						if(post.get(j).getLocation().equals(GPSLocation.get(i).getName())||post.get(j).getUsername().equals(username)){
 							if(post.get(j).getFilter().equals("Whitelist")&&property.size()!=0){
 								for(Property p:post.get(j).getProperty()){
 									if(property.contains(p)){
@@ -345,4 +347,51 @@ public class Storage {
 			}
 		return false;
 	}
+	public boolean addWifiLocation(String name, String ssid) {
+		
+		if(wifiLocation.size()!=0)
+			for (WifiLocation tmplocation : wifiLocation) {
+				if(tmplocation.getName().equals(name)&&
+						(tmplocation.getSsid().equals(ssid))){
+					return false;
+				}
+			}
+		System.out.println("Wifi Location added:\n"+"name: "+name+
+			" ssid: "+ssid);
+		wifiLocation.add(new WifiLocation(name, ssid));
+		return false;
+	}
+	
+	public boolean removeWifiLocation(String name, String ssid){
+		
+		if(wifiLocation.size()!=0)
+			for (WifiLocation tmplocation : wifiLocation) {
+				if(tmplocation.getName().equals(name)&&
+						(tmplocation.getSsid().equals(ssid))){
+					wifiLocation.remove(tmplocation);
+					return false;
+				}
+			}
+		System.out.println("Wifi Location removed:\n"+"name: "+name+
+			"ssid: "+ssid);
+		return false;
+		
+	}
+	public JSONObject getWifiLocation() {
+		JSONObject json=new JSONObject();
+		if(wifiLocation.size()!=0)
+			for (int i=0;i<wifiLocation.size();i++) {
+				JSONArray jsonLocation = new JSONArray();
+				
+					jsonLocation.add(wifiLocation.get(i).getName());
+					jsonLocation.add(wifiLocation.get(i).getSsid());
+					json.put("location"+i, jsonLocation);
+			}
+			System.out.println("json output: "+json.toJSONString());
+		return json;
+	}
+	
+	
+	
+	
 }
