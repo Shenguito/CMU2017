@@ -54,6 +54,7 @@ public class Storage {
 				return false;
 			}
 		}
+		System.out.println(username+"==> Creating");
 		user.add(new User(username, password));
 		return true;
 		
@@ -160,17 +161,17 @@ public class Storage {
 			return false;
 		}
 		ArrayList<Property> prof=new ArrayList<>();
-		if(property!=null){
+		if(!property.equals("null")){
 			String[] propertyParser=StringParser.getProperty(property);
 			for(int i=0;i<propertyParser.length;i+=2){
 				prof.add(new Property(propertyParser[i], propertyParser[i+1]));
 			}
 			post.add(new Post(title, message, username, start, end, location, filter, mode, prof));
-			System.out.println("post added :"+post.get(post.size()-1).getTitle());
+			System.out.println("post with property added :"+post.get(post.size()-1).getTitle());
 			return true;
 		}else{
-			post.add(new Post(title, message, username, start, end, location, filter, mode, prof));
-			System.out.println("post added :"+post.get(post.size()-1).getTitle());
+			post.add(new Post(title, message, username, start, end, location, filter, mode, null));
+			System.out.println("post without property added :"+post.get(post.size()-1).getTitle());
 			return true;
 		}
 		
@@ -188,11 +189,16 @@ public class Storage {
 			}
 			System.out.println("user has location: "+latitude+":"+longitude);
 			for(int i=0,w=0;i<GPSLocation.size();i++){
+				System.out.println("Location: "+GPSLocation.get(i).getLatitude()+":"+GPSLocation.get(i).getLongitude()+
+						"\nuser: "+latitude+":"+longitude);
+				System.out.println("Result: "+Algorithm.distFrom(GPSLocation.get(i).getLatitude(), GPSLocation.get(i).getLongitude(), Double.parseDouble(latitude), Double.parseDouble(longitude)));
 				if(Algorithm.distFrom(GPSLocation.get(i).getLatitude(), GPSLocation.get(i).getLongitude(), Double.parseDouble(latitude), Double.parseDouble(longitude))<=
 								GPSLocation.get(i).getRadius()){
 					for(int j=0 ; j<post.size();j++){
 						JSONArray arrayPost=new JSONArray();
+						System.out.println("Saber: "+post.get(j).getLocation()+":"+GPSLocation.get(i).getName());
 						if(post.get(j).getLocation().equals(GPSLocation.get(i).getName())||post.get(j).getUsername().equals(username)){
+							System.out.println("Post with: "+post.get(j).getFilter());
 							if(post.get(j).getFilter().equals("Whitelist")&&property.size()!=0){
 								for(Property p:post.get(j).getProperty()){
 									if(property.contains(p)){
@@ -224,7 +230,10 @@ public class Storage {
 											arrayPost.add(post.get(j).getLocation());
 											arrayPost.add(post.get(j).getFilter());
 											arrayPost.add(post.get(j).getMode());
-											arrayPost.add(post.get(j).getPropertyString());
+											if(post.get(j).getPropertyString()!=null)
+												arrayPost.add(post.get(j).getPropertyString());
+											else
+												arrayPost.add(" ");
 											
 											json.put("post"+w, arrayPost);
 											w++;
@@ -241,7 +250,10 @@ public class Storage {
 									arrayPost.add(post.get(j).getLocation());
 									arrayPost.add(post.get(j).getFilter());
 									arrayPost.add(post.get(j).getMode());
-									arrayPost.add(post.get(j).getPropertyString());
+									if(post.get(j).getPropertyString()!=null)
+										arrayPost.add(post.get(j).getPropertyString());
+									else
+										arrayPost.add(" ");
 									
 									json.put("post"+w, arrayPost);
 									w++;

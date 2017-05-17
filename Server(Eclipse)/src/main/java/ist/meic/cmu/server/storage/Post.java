@@ -22,6 +22,7 @@ public class Post {
 		this.location=location;
 		this.filter=filter;
 		this.mode=mode;
+		if(property!=null)
 		this.property = property;
 	}
 	public String getTitle() {
@@ -77,6 +78,8 @@ public class Post {
 	}
 	public String getPropertyString(){
 		String result="";
+		if(property.size()==0)
+			return null;
 		for(Property p:property){
 			result+=p.getKey()+","+p.getValue()+"-";
 		}
