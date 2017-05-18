@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Random;
 
 import org.json.simple.JSONArray;
@@ -37,15 +38,20 @@ public class Storage {
 		GPSLocation.add(new GPSLocation("Fitness Hut Arco Cego",38.7347492,-9.1418714,50));
 		
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm");
+		Date start=null;
+		Date end=null;
 		try {
-			Date start = format.parse("01/01/01 01:01");
-			Date end=format.parse("11/11/11 11:11");
-			property.add(new Property("a", "a"));
-			property.add(new Property("b", "b"));
-			post.add(new Post("title", "default message", "a", start, end, "location", "Blacklist", "Centralized", property));
+			start = format.parse("01/01/2016 16:20");
+			end = format.parse("01/01/2020 16:20");
+			ArrayList<Property> p=new ArrayList<Property>();
+			p.add(new Property("a", "a"));
+			post.add(new Post("title1", "message1", "a", start, end, "Jardim do Arco do Cego", "Blacklist", "Centralized", p));
+			post.add(new Post("title2", "message2", "a", start, end, "Instituto Superior Técnico", "Whitelist", "Decentralized", p));
 		} catch (ParseException e) {
-			System.out.println("defaul value not added!!!");
+			System.out.println("Date format error!!!");
 		}
+		
+		
 	}
 	public boolean createUser(String username, String password){
 		if(user.size()!=0)
@@ -188,6 +194,7 @@ public class Storage {
 				}
 			}
 			System.out.println("user has location: "+latitude+":"+longitude);
+			
 			for(int i=0,w=0;i<GPSLocation.size();i++){
 				System.out.println("Location: "+GPSLocation.get(i).getLatitude()+":"+GPSLocation.get(i).getLongitude()+
 						"\nuser: "+latitude+":"+longitude);
@@ -197,7 +204,7 @@ public class Storage {
 					for(int j=0 ; j<post.size();j++){
 						JSONArray arrayPost=new JSONArray();
 						System.out.println("Saber: "+post.get(j).getLocation()+":"+GPSLocation.get(i).getName());
-						if(post.get(j).getLocation().equals(GPSLocation.get(i).getName())||post.get(j).getUsername().equals(username)){
+						if(post.get(j).getLocation().equals(GPSLocation.get(i).getName())){
 							System.out.println("Post with: "+post.get(j).getFilter());
 							if(post.get(j).getFilter().equals("Whitelist")&&property.size()!=0){
 								for(Property p:post.get(j).getProperty()){
@@ -260,6 +267,22 @@ public class Storage {
 									System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
 								}
 							}
+						}else if(post.get(j).getUsername().equals(username)){
+							arrayPost.add(post.get(j).getTitle());
+							arrayPost.add(post.get(j).getMessage());
+							arrayPost.add(post.get(j).getUsername());
+							arrayPost.add(post.get(j).getStartDate());
+							arrayPost.add(post.get(j).getEndDate());
+							arrayPost.add(post.get(j).getLocation());
+							arrayPost.add(post.get(j).getFilter());
+							arrayPost.add(post.get(j).getMode());
+							if(post.get(j).getPropertyString()!=null)
+								arrayPost.add(post.get(j).getPropertyString());
+							else
+								arrayPost.add(" ");
+							json.put("post"+w, arrayPost);
+							w++;
+							System.out.println("Userpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
 						}
 					}
 				}
