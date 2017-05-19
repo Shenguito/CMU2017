@@ -105,7 +105,7 @@ public class Manager {
     	}
 		return null;
     }
-    @RequestMapping(value="/addWifiLocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/addwifiLocation", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public JSONObject addWifiLocation(@RequestBody JSONObject json)
     {
@@ -121,7 +121,7 @@ public class Manager {
 		return null;
     }
     
-    @RequestMapping(value="/removeWifiLocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/removewifiLocation", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public JSONObject removeWifiLocation(@RequestBody JSONObject json)
     {
@@ -161,7 +161,7 @@ public class Manager {
 		return storage.getLocation();
     }
     
-    @RequestMapping(value="/checkWifilocation", method={ RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value="/checkwifilocation", method={ RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public JSONObject getWifiLocation(@RequestBody JSONObject json)
     {
@@ -225,6 +225,19 @@ public class Manager {
     		return json;
     	}
 		return null;
+    }
+    
+    @RequestMapping(value="/checkwifipost", method={ RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public JSONObject getWifiPost(@RequestBody JSONObject json)
+    {
+    	String ssid=(String) json.get("ssid");
+    	String username=(String) json.get("username");
+    	System.out.println("Preparing for get post... "+ssid+":"+username);
+    	if(ssid!=null){
+    		return storage.getWifiPost(ssid, username);
+    	}
+    	return null;
     }
 
     @RequestMapping(value="/getproperty", method={ RequestMethod.GET, RequestMethod.POST })

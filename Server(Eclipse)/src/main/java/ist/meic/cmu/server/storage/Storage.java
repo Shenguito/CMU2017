@@ -265,6 +265,8 @@ public class Storage {
 									json.put("post"+w, arrayPost);
 									w++;
 									System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
+									break;
+									
 								}
 							}
 						}
@@ -430,8 +432,94 @@ public class Storage {
 			System.out.println("json output: "+json.toJSONString());
 		return json;
 	}
-	
-	
-	
+	public JSONObject getWifiPost(String username, String ssid) {
+		JSONObject json=new JSONObject();
+		ArrayList<Property> property=new ArrayList<Property>();
+		if(user.size()!=0&&post.size()!=0&&GPSLocation.size()!=0){
+			for (int i=0;i<user.size();i++) {
+				if(user.get(i).getUsername().equals(username)){
+					property=user.get(i).getProperty();
+					System.out.println("User exists!");
+					break;
+				}
+			}
+			
+			for(int i=0,w=0;i<wifiLocation.size();i++){
+				if(wifiLocation.get(i).getSsid().equals(ssid)){
+				System.out.println("Location: "+wifiLocation.get(i).getName()+":"+wifiLocation.get(i).getSsid());
+					for(int j=0 ; j<post.size();j++){
+						JSONArray arrayPost=new JSONArray();
+						if(post.get(j).getLocation().equals(wifiLocation.get(i).getName())){
+							System.out.println("Post with: "+post.get(j).getFilter());
+							if(post.get(j).getFilter().equals("Whitelist")&&property.size()!=0){
+								for(Property p:post.get(j).getProperty()){
+									if(property.contains(p)){
+										arrayPost.add(post.get(j).getTitle());
+										arrayPost.add(post.get(j).getMessage());
+										arrayPost.add(post.get(j).getUsername());
+										arrayPost.add(post.get(j).getStartDate());
+										arrayPost.add(post.get(j).getEndDate());
+										arrayPost.add(post.get(j).getLocation());
+										arrayPost.add(post.get(j).getFilter());
+										arrayPost.add(post.get(j).getMode());
+										arrayPost.add(post.get(j).getPropertyString());
+										
+										json.put("post"+w, arrayPost);
+										w++;
+										System.out.println("whitepost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
+										break;
+									}
+								}
+							}else if(post.get(j).getFilter().equals("Blacklist")){
+								if(property.size()!=0){
+									for(Property p:post.get(j).getProperty()){
+										if(!property.contains(p)){
+											arrayPost.add(post.get(j).getTitle());
+											arrayPost.add(post.get(j).getMessage());
+											arrayPost.add(post.get(j).getUsername());
+											arrayPost.add(post.get(j).getStartDate());
+											arrayPost.add(post.get(j).getEndDate());
+											arrayPost.add(post.get(j).getLocation());
+											arrayPost.add(post.get(j).getFilter());
+											arrayPost.add(post.get(j).getMode());
+											if(post.get(j).getPropertyString()!=null)
+												arrayPost.add(post.get(j).getPropertyString());
+											else
+												arrayPost.add(" ");
+											
+											json.put("post"+w, arrayPost);
+											w++;
+											System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
+											break;
+										}
+									}
+								}else{
+									arrayPost.add(post.get(j).getTitle());
+									arrayPost.add(post.get(j).getMessage());
+									arrayPost.add(post.get(j).getUsername());
+									arrayPost.add(post.get(j).getStartDate());
+									arrayPost.add(post.get(j).getEndDate());
+									arrayPost.add(post.get(j).getLocation());
+									arrayPost.add(post.get(j).getFilter());
+									arrayPost.add(post.get(j).getMode());
+									if(post.get(j).getPropertyString()!=null)
+										arrayPost.add(post.get(j).getPropertyString());
+									else
+										arrayPost.add(" ");
+									
+									json.put("post"+w, arrayPost);
+									w++;
+									System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
+									break;
+									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
 	
 }
