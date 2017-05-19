@@ -267,22 +267,27 @@ public class Storage {
 									System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
 								}
 							}
-						}else if(post.get(j).getUsername().equals(username)){
-							arrayPost.add(post.get(j).getTitle());
-							arrayPost.add(post.get(j).getMessage());
-							arrayPost.add(post.get(j).getUsername());
-							arrayPost.add(post.get(j).getStartDate());
-							arrayPost.add(post.get(j).getEndDate());
-							arrayPost.add(post.get(j).getLocation());
-							arrayPost.add(post.get(j).getFilter());
-							arrayPost.add(post.get(j).getMode());
-							if(post.get(j).getPropertyString()!=null)
-								arrayPost.add(post.get(j).getPropertyString());
-							else
-								arrayPost.add(" ");
-							json.put("post"+w, arrayPost);
-							w++;
-							System.out.println("Userpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
+						}
+					}
+				}else{
+					for(int j=0 ; j<post.size();j++){
+						JSONArray arrayPost=new JSONArray();
+						if(post.get(j).getUsername().equals(username)){
+						arrayPost.add(post.get(j).getTitle());
+						arrayPost.add(post.get(j).getMessage());
+						arrayPost.add(post.get(j).getUsername());
+						arrayPost.add(post.get(j).getStartDate());
+						arrayPost.add(post.get(j).getEndDate());
+						arrayPost.add(post.get(j).getLocation());
+						arrayPost.add(post.get(j).getFilter());
+						arrayPost.add(post.get(j).getMode());
+						if(post.get(j).getPropertyString()!=null)
+							arrayPost.add(post.get(j).getPropertyString());
+						else
+							arrayPost.add(" ");
+						json.put("post"+w, arrayPost);
+						w++;
+						System.out.println("Userpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
 						}
 					}
 				}
