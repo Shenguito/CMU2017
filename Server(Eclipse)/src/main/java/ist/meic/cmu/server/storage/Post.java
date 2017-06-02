@@ -81,7 +81,7 @@ public class Post {
 		if(property.size()==0)
 			return null;
 		for(Property p:property){
-			result+=p.getKey()+","+p.getValue()+"-";
+			result+=p.getKey()+","+p.getValue();
 		}
 		return result;
 	}

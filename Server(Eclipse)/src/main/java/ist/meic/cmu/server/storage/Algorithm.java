@@ -1,5 +1,8 @@
 package ist.meic.cmu.server.storage;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 public class Algorithm {
 	
 	public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
@@ -13,7 +16,7 @@ public class Algorithm {
 	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 	    double dist = earthRadius * c;
 	    dist=dist*1.609344; //convert to kilometers  *don't know if this step is necessary
-	    return dist*1000;
+	    return dist;
     }
 	
 }

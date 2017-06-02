@@ -26,17 +26,17 @@ public class Storage {
 		user=new ArrayList<User>();
 		post=new ArrayList<Post>();
 		property=new ArrayList<Property>();
-		User u=new User("a", "a");
-		u.addProperty(new Property("a", "a"));
-		user.add(u);
-		GPSLocation.add(new GPSLocation("Jardim do Arco do Cego",38.7350296,-9.141876,50));
-		GPSLocation.add(new GPSLocation("Aeroporto de Lisboa",38.7755936,-9.1353667,50));
-		GPSLocation.add(new GPSLocation("Centro Colombo",38.754588,-9.1907547,50));
-		GPSLocation.add(new GPSLocation("Instituto Superior Técnico",38.73794298993974,-9.137803986668587,50));
-		GPSLocation.add(new GPSLocation("Casa da Música",41.1568533,-8.6309936,50));
-		GPSLocation.add(new GPSLocation("Big Ben",51.5007292,-0.1268141,50));
-		GPSLocation.add(new GPSLocation("Fitness Hut Arco Cego",38.7347492,-9.1418714,50));
-		
+		User Alice=new User("Alice", "passA");
+		User Bob=new User("Bob", "passB");
+		Alice.addProperty(new Property("Sport", "Volleyball"));
+		Alice.addProperty(new Property("Favorite TV Show", "Friends"));
+		Bob.addProperty(new Property("Sport", "Basketball"));
+		Bob.addProperty(new Property("Favorite Movie", "Matrix"));
+		user.add(Bob);
+		user.add(Alice);
+		GPSLocation.add(new GPSLocation("Terreiro do Paço",38.707708,-9.136522, 50));
+		wifiLocation.add(new WifiLocation("eduroam", "eduroam"));
+		/*
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm");
 		Date start=null;
 		Date end=null;
@@ -46,10 +46,14 @@ public class Storage {
 			ArrayList<Property> p=new ArrayList<Property>();
 			p.add(new Property("a", "a"));
 			post.add(new Post("title1", "message1", "a", start, end, "Jardim do Arco do Cego", "Blacklist", "Centralized", p));
-			post.add(new Post("title2", "message2", "a", start, end, "Instituto Superior Técnico", "Whitelist", "Decentralized", p));
+			post.add(new Post("title2", "message2", "a", start, end, "Instituto Superior Técnico", "Whitelist", "Centralized", p));
+			//post.add(new Post("title2", "message2", "a", start, end, "Instituto Superior Técnico", "Whitelist", "Decentralized", p));
 		} catch (ParseException e) {
 			System.out.println("Date format error!!!");
 		}
+		*/
+		
+		
 		
 		
 	}
@@ -189,16 +193,16 @@ public class Storage {
 			for (int i=0;i<user.size();i++) {
 				if(user.get(i).getUsername().equals(username)){
 					property=user.get(i).getProperty();
-					System.out.println("User exists!");
+//					System.out.println("User exists!");
 					break;
 				}
 			}
 			System.out.println("user has location: "+latitude+":"+longitude);
 			
 			for(int i=0,w=0;i<GPSLocation.size();i++){
-				System.out.println("Location: "+GPSLocation.get(i).getLatitude()+":"+GPSLocation.get(i).getLongitude()+
-						"\nuser: "+latitude+":"+longitude);
-				System.out.println("Result: "+Algorithm.distFrom(GPSLocation.get(i).getLatitude(), GPSLocation.get(i).getLongitude(), Double.parseDouble(latitude), Double.parseDouble(longitude)));
+//				System.out.println("Location: "+GPSLocation.get(i).getLatitude()+":"+GPSLocation.get(i).getLongitude()+
+//						"\nuser: "+latitude+":"+longitude);
+//				System.out.println("Result: "+Algorithm.distFrom(GPSLocation.get(i).getLatitude(), GPSLocation.get(i).getLongitude(), Double.parseDouble(latitude), Double.parseDouble(longitude)));
 				if(Algorithm.distFrom(GPSLocation.get(i).getLatitude(), GPSLocation.get(i).getLongitude(), Double.parseDouble(latitude), Double.parseDouble(longitude))<=
 								GPSLocation.get(i).getRadius()){
 					for(int j=0 ; j<post.size();j++){
@@ -206,9 +210,32 @@ public class Storage {
 						System.out.println("Saber: "+post.get(j).getLocation()+":"+GPSLocation.get(i).getName());
 						if(post.get(j).getLocation().equals(GPSLocation.get(i).getName())){
 							System.out.println("Post with: "+post.get(j).getFilter());
-							if(post.get(j).getFilter().equals("Whitelist")&&property.size()!=0){
+							if(post.get(j).getUsername().equals(username)){
+								if(post.get(j).getUsername().equals(username)){
+								arrayPost.add(post.get(j).getTitle());
+								arrayPost.add(post.get(j).getMessage());
+								arrayPost.add(post.get(j).getUsername());
+								arrayPost.add(post.get(j).getStartDate());
+								arrayPost.add(post.get(j).getEndDate());
+								arrayPost.add(post.get(j).getLocation());
+								arrayPost.add(post.get(j).getFilter());
+								arrayPost.add(post.get(j).getMode());
+								if(post.get(j).getPropertyString()!=null)
+									arrayPost.add(post.get(j).getPropertyString());
+								else
+									arrayPost.add(" ");
+								json.put("post"+w, arrayPost);
+								w++;
+								System.out.println("Userpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
+								}
+							}
+							else if(post.get(j).getFilter().equals("Whitelist")&&property.size()!=0){
 								for(Property p:post.get(j).getProperty()){
-									if(property.contains(p)){
+									for(int s=0;s<property.size();s++){
+										System.out.println("test whitelist:"+property.get(s).getKey()+":"+p.getKey());
+										System.out.println("test whitelist:"+property.get(s).getValue()+":"+p.getValue());
+									if(("\""+property.get(s).getKey()+"\"").equals(p.getKey())&&
+											("\""+property.get(s).getValue()+"\"").equals(p.getValue())){
 										arrayPost.add(post.get(j).getTitle());
 										arrayPost.add(post.get(j).getMessage());
 										arrayPost.add(post.get(j).getUsername());
@@ -224,11 +251,14 @@ public class Storage {
 										System.out.println("whitepost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
 										break;
 									}
+									}
 								}
 							}else if(post.get(j).getFilter().equals("Blacklist")){
 								if(property.size()!=0){
 									for(Property p:post.get(j).getProperty()){
-										if(!property.contains(p)){
+										for(int s=0;s<property.size();s++){
+										if(!property.get(s).getKey().equals(p.getKey())&&
+												!property.get(s).getValue().equals(p.getValue())){
 											arrayPost.add(post.get(j).getTitle());
 											arrayPost.add(post.get(j).getMessage());
 											arrayPost.add(post.get(j).getUsername());
@@ -247,6 +277,7 @@ public class Storage {
 											System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
 											break;
 										}
+										}
 									}
 								}else{
 									arrayPost.add(post.get(j).getTitle());
@@ -264,7 +295,7 @@ public class Storage {
 									
 									json.put("post"+w, arrayPost);
 									w++;
-									System.out.println("blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
+									System.out.println("else blackpost: "+post.get(j).getTitle()+" : "+post.get(j).getMode()+" : "+post.get(j).getFilter()+" : "+post.get(j).getPropertyString());
 									break;
 									
 								}
@@ -435,7 +466,7 @@ public class Storage {
 	public JSONObject getWifiPost(String username, String ssid) {
 		JSONObject json=new JSONObject();
 		ArrayList<Property> property=new ArrayList<Property>();
-		if(user.size()!=0&&post.size()!=0&&GPSLocation.size()!=0){
+		if(user.size()!=0&&post.size()!=0&&wifiLocation.size()!=0){
 			for (int i=0;i<user.size();i++) {
 				if(user.get(i).getUsername().equals(username)){
 					property=user.get(i).getProperty();
